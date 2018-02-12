@@ -3,10 +3,10 @@
  */
 package daa.practice1.randomaccessmachine;
 
-import java.io.Reader;
+import java.io.IOException;
 
 import daa.practice1.randomaccessmachine.alu.ArithmeticLogicControlUnit;
-import daa.practice1.randomaccessmachine.memory.ProgramMemory;
+import daa.practice1.randomaccessmachine.memory.*;
 
 /**
  * @author angel
@@ -33,12 +33,13 @@ public class RandomAccessMachine {
 	 * 	3. The third argument is the file that contains the outputfile.
 	 * 	4. The fourth argument is the debug option.
 	 */
-	public static void main(String[] args) throws IllegalArgumentException {
+	public static void main(String[] args) throws IllegalArgumentException, IOException {
 		if (args.length != 4) {
 			throw new IllegalArgumentException(showHelp());
 		}
 		
-		ProgramMemory programMemory = new ProgramMemory(new Reader(args[0]));
+		ProgramMemory programMemory = new ProgramMemory(args[0]);
+		DataMemory dataMemory = new DataMemory();
 		
 	}
 }
