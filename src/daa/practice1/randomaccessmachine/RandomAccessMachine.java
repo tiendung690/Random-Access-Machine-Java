@@ -41,6 +41,5 @@ public class RandomAccessMachine {
 		
 		ProgramMemory programMemory = new ProgramMemory(args[0]);
 		DataMemory dataMemory = new DataMemory();
-		OutputTape outputTape = new OutputTape(args[2]);
 	}
 }
