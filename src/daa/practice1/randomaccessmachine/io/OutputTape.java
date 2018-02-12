@@ -11,7 +11,7 @@ import java.io.*;
  */
 public class OutputTape {
 	
-	BufferedWriter outputTape;
+	private BufferedWriter outputTape;
 
 	public OutputTape(String outputTapeFilename) throws IOException {
 		outputTape = new BufferedWriter(new FileWriter(outputTapeFilename));

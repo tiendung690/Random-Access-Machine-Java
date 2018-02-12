@@ -3,30 +3,26 @@
  */
 package daa.practice1.randomaccessmachine.io;
 
-import java.io.BufferedReader;
-import java.io.Reader;
+import java.io.*;
 
 /**
  * @author angel
  *
  */
-public class InputTape extends BufferedReader {
+public class InputTape {
 
-	/**
-	 * @param arg0
-	 */
-	public InputTape(Reader arg0) {
-		super(arg0);
-		// TODO Auto-generated constructor stub
+	private BufferedReader inputTape;
+	
+	public InputTape(String outputTapeFilename) throws FileNotFoundException {
+		inputTape = new BufferedReader(new FileReader(outputTapeFilename));
 	}
-
-	/**
-	 * @param arg0
-	 * @param arg1
-	 */
-	public InputTape(Reader arg0, int arg1) {
-		super(arg0, arg1);
-		// TODO Auto-generated constructor stub
+	
+	public String read() throws IOException {
+		return inputTape.readLine();
+	}
+	
+	public void close() throws IOException {
+		inputTape.close();
 	}
 
 }

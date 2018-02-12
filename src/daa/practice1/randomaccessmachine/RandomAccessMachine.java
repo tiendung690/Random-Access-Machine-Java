@@ -6,7 +6,7 @@ package daa.practice1.randomaccessmachine;
 import java.io.IOException;
 
 import daa.practice1.randomaccessmachine.alu.ArithmeticLogicControlUnit;
-import daa.practice1.randomaccessmachine.io.OutputTape;
+import daa.practice1.randomaccessmachine.io.*;
 import daa.practice1.randomaccessmachine.memory.*;
 
 /**
@@ -40,8 +40,7 @@ public class RandomAccessMachine {
 		}
 		
 		ProgramMemory programMemory = new ProgramMemory(args[0]);
-		DataMemory dataMemory = new DataMemory();
-
+		InputTape inputTape = new InputTape(args[1]);		
 		OutputTape outputTape = new OutputTape(args[2]);
 
 		outputTape.close();
