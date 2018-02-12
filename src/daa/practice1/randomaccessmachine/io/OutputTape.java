@@ -3,30 +3,26 @@
  */
 package daa.practice1.randomaccessmachine.io;
 
-import java.io.BufferedWriter;
-import java.io.Writer;
+import java.io.*;
 
 /**
  * @author angel
  *
  */
-public class OutputTape extends BufferedWriter {
+public class OutputTape {
+	
+	BufferedWriter outputTape;
 
-	/**
-	 * @param arg0
-	 */
-	public OutputTape(Writer arg0) {
-		super(arg0);
-		// TODO Auto-generated constructor stub
+	public OutputTape(String outputTapeFilename) throws IOException {
+		outputTape = new BufferedWriter(new FileWriter(outputTapeFilename));
 	}
-
-	/**
-	 * @param arg0
-	 * @param arg1
-	 */
-	public OutputTape(Writer arg0, int arg1) {
-		super(arg0, arg1);
-		// TODO Auto-generated constructor stub
+	
+	public void write(String lineToWrite) throws IOException {
+		outputTape.write(lineToWrite);
 	}
-
+	
+	public void dispose() throws IOException {
+		System.out.println("Closing Output Tape");
+		outputTape.close();
+	}
 }

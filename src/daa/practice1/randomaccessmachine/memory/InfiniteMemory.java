@@ -15,7 +15,7 @@ public abstract class InfiniteMemory<T> {
 	Integer maxCapacity;
 
 	public InfiniteMemory() {
-		maxCapacity = Integer.MAX_VALUE;
+		maxCapacity = new Double(Math.pow(10, 7)).intValue(); // TODO: Worth it?
 		memory = new ArrayList<T>(maxCapacity);
 	}
 	

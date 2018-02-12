@@ -6,6 +6,7 @@ package daa.practice1.randomaccessmachine;
 import java.io.IOException;
 
 import daa.practice1.randomaccessmachine.alu.ArithmeticLogicControlUnit;
+import daa.practice1.randomaccessmachine.io.OutputTape;
 import daa.practice1.randomaccessmachine.memory.*;
 
 /**
@@ -34,12 +35,12 @@ public class RandomAccessMachine {
 	 * 	4. The fourth argument is the debug option.
 	 */
 	public static void main(String[] args) throws IllegalArgumentException, IOException {
-		if (args.length != 4) {
+		if ((args.length != 3) &&  (args.length != 4)) {
 			throw new IllegalArgumentException(showHelp());
 		}
 		
 		ProgramMemory programMemory = new ProgramMemory(args[0]);
 		DataMemory dataMemory = new DataMemory();
-		
+		OutputTape outputTape = new OutputTape(args[2]);
 	}
 }
