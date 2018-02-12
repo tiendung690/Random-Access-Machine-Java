@@ -1,15 +1,16 @@
-/**
- * 
- */
+/** File ProgramRegister. */
 package daa.practice1.randomaccessmachine.memory;
 
+
 /**
- * @author angel
- *
+ * [DESCRIPTION]
+ * @author Ángel Igareta
+ * @version 1.0
+ * @since 12-2-2018
  */
 public class ProgramRegister extends Register<String> {
 
-	int instructionType;
+	private int instructionType;
 	
 	public ProgramRegister(String data) {
 		super(data);
