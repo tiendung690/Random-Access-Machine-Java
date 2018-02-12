@@ -34,7 +34,7 @@ public class RandomAccessMachine {
 	 * 	3. The third argument is the file that contains the outputfile.
 	 * 	4. The fourth argument is the debug option.
 	 */
-	public static void main(String[] args) throws IllegalArgumentException, IOException {
+	public static void main(String[] args) throws IllegalArgumentException, IOException { // TODO: Handle exceptions
 		if ((args.length != 3) &&  (args.length != 4)) {
 			throw new IllegalArgumentException(showHelp());
 		}
@@ -43,6 +43,7 @@ public class RandomAccessMachine {
 		InputTape inputTape = new InputTape(args[1]);		
 		OutputTape outputTape = new OutputTape(args[2]);
 
+		inputTape.close();
 		outputTape.close();
 	}
 }
