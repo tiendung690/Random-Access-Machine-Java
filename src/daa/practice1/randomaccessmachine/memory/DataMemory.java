@@ -1,25 +1,36 @@
-/**
- * 
- */
+/** File DataMemory. */
 package daa.practice1.randomaccessmachine.memory;
 
+
 /**
- * @author angel
- *
+ * Class that contains an array of the Data Register that 
+ * the Random Access Machine will use.
+ * @author Ángel Igareta
+ * @version 1.0
+ * @since 12-2-2018
  */
 public class DataMemory extends InfiniteMemory<DataRegister> {
 	
+	/**
+	 * Constructor that only calls it's superclass constructor.
+	 */
 	public DataMemory() {
 		super();
 		
 		// R0
 	}
 	
+	/* (non-Javadoc)
+	 * @see daa.practice1.randomaccessmachine.memory.InfiniteMemory#setRegisterAt(int, java.lang.Object)
+	 */
 	@Override
 	public void setRegisterAt(int index, DataRegister data) {
 		memory.set(getPosition(index), data);
 	}
 
+	/* (non-Javadoc)
+	 * @see daa.practice1.randomaccessmachine.memory.InfiniteMemory#getRegisterAt(int)
+	 */
 	@Override
 	public DataRegister getRegisterAt(int index) {
 		if (index < 0 || index >= memory.size()) {
