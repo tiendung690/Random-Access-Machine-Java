@@ -20,7 +20,7 @@ public class InputTape {
 	/**
 	 * Constructor of the InputTape class. It initializes the inputTape to a BufferedReader
 	 * that contains text from a character-input stream.
-	 * @param outputTapeFilename Name of the file that contains the inputTape.
+	 * @param inputTapeFilename Name of the file that contains the inputTape.
 	 * @throws FileNotFoundException
 	 */
 	public InputTape(String inputTapeFilename) throws FileNotFoundException {
