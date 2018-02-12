@@ -21,8 +21,7 @@ public class OutputTape {
 		outputTape.write(lineToWrite);
 	}
 	
-	public void dispose() throws IOException {
-		System.out.println("Closing Output Tape");
+	public void close() throws IOException {
 		outputTape.close();
 	}
 }
