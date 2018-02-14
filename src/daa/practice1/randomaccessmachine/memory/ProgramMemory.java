@@ -56,6 +56,14 @@ public class ProgramMemory extends InfiniteMemory<ProgramRegister> {
 		
 		reader.close();
 	}
+	
+	/**
+	 * @param tagName Name of the tag.
+	 * @return Line of the tag passed by argument.
+	 */
+	public int getLineOfTag(String tagName) {
+		return tagHash.get(tagName); //TODO: Throw error
+	}
 
 	/* (non-Javadoc)
 	 * @see daa.practice1.randomaccessmachine.memory.InfiniteMemory#setRegisterAt(int, java.lang.Object)
@@ -75,4 +83,7 @@ public class ProgramMemory extends InfiniteMemory<ProgramRegister> {
 		//}
 		return memory.get(getPosition(index));
 	}
+	
+	
+	
 }
