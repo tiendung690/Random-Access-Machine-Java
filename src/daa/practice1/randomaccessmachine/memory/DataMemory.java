@@ -26,7 +26,7 @@ public class DataMemory extends InfiniteMemory<DataRegister> {
 	 */
 	@Override
 	public void setRegisterAt(int index, DataRegister data) {
-		memory.set(getPosition(index), data);
+		memory.put(getPosition(index), data);
 	}
 
 	/* (non-Javadoc)

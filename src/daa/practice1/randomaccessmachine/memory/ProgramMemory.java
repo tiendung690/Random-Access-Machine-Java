@@ -4,6 +4,8 @@ package daa.practice1.randomaccessmachine.memory;
 /** Import the necessary classes for FileReader and BufferedReader.*/
 import java.io.*;
 
+import daa.practice1.randomaccessmachine.memory.register.ProgramRegister;
+
 
 /**
  * Class that contains an array of the Program Register that the Random Access Machine
@@ -24,10 +26,20 @@ public class ProgramMemory extends InfiniteMemory<ProgramRegister> {
 		super();
 		
 		BufferedReader reader = new BufferedReader(new FileReader(programFilename));
-		int i = 0;
+		int i = 1;
 		
 		while (reader.ready()) {
-			setRegisterAt(i++, new ProgramRegister(reader.readLine()));
+			String newLine = reader.readLine().replaceFirst("\\s*","");
+			
+			if (!newLine.startsWith("#") && !newLine.isEmpty()) { // Omit comments or blank lines
+				setRegisterAt(i, new ProgramRegister(newLine));
+				// System.out.println(i + ": " + getRegisterAt(i).getInstructionType().name() + " " +
+				//		getRegisterAt(i).getInstructionType().getOperatorType().name() + " " +
+				//		getRegisterAt(i).getInstructionType().getOperatorType().getTag() + " " +
+				//		getRegisterAt(i).getInstructionType().getOperatorType().getRegisterNumber());
+			}
+			
+			i++;
 		}
 		
 		reader.close();
@@ -38,7 +50,7 @@ public class ProgramMemory extends InfiniteMemory<ProgramRegister> {
 	 */
 	@Override
 	public void setRegisterAt(int index, ProgramRegister data) {
-		memory.set(getPosition(index), data);
+		memory.put(getPosition(index), data);
 	}
 
 	/* (non-Javadoc)
@@ -46,9 +58,9 @@ public class ProgramMemory extends InfiniteMemory<ProgramRegister> {
 	 */
 	@Override
 	public ProgramRegister getRegisterAt(int index) {
-		if (index < 0 || index >= memory.size()) {
-			setRegisterAt(index, new ProgramRegister(""));
-		}
+		//if (index < 0 || index >= memory.size()) {
+		//	setRegisterAt(index, new ProgramRegister(""));
+		//}
 		return memory.get(getPosition(index));
 	}
 }

@@ -24,7 +24,7 @@ public class ProgramRegister extends Register<String> {
 		analyzeInstructionType(data.split(" ")[0]);
 		
 		if (instructionType != InstructionType.halt) {
-			instructionType.analyzeOperatorType(data.split(" ")[1]);			
+			instructionType.analyzeOperatorType(data.split(" ")[1]);
 		}
 	}
 

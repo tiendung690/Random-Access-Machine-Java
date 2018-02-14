@@ -16,6 +16,7 @@ public enum OperatorType {
 	TAG;
 	
 	private int registerNumber;
+	private String tagName;
 	
 	public void setRegisterNumber(int registerNumber) {
 		this.registerNumber = registerNumber;
@@ -23,5 +24,13 @@ public enum OperatorType {
 	
 	public int getRegisterNumber() {
 		return registerNumber;
+	}
+
+	public void setTag(String tagName) {
+		this.tagName = tagName;
+	}
+	
+	public String getTag() {
+		return tagName;
 	}
 }

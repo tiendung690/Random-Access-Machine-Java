@@ -2,7 +2,7 @@
 package daa.practice1.randomaccessmachine.memory;
 
 /** Import ArraList due the class InfiniteMemory uses it. */
-import java.util.ArrayList;
+import java.util.Hashtable;
 
 
 /**
@@ -16,7 +16,7 @@ import java.util.ArrayList;
 public abstract class InfiniteMemory<T> {
 
 	/** Generic ArrayList. */
-	protected ArrayList<T> memory;
+	protected Hashtable<Integer, T> memory;
 	/** Constant that defines the minimum value of the memory. */
 	private final int MAX_CAPACITY = new Double(Math.pow(10, 7)).intValue(); // TODO: Worth it?
 	
@@ -25,7 +25,7 @@ public abstract class InfiniteMemory<T> {
 	 * generic ArrayList assigning it a minimum size.
 	 */
 	protected InfiniteMemory() {
-		memory = new ArrayList<T>(MAX_CAPACITY);
+		memory = new Hashtable<Integer, T>();
 	}
 	
 	/**
