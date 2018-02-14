@@ -1,13 +1,11 @@
-/**
- * 
- */
+/** File InstructionType. */
 package daa.practice1.randomaccessmachine.memory.instruction;
 
 /**
- * [DESCRIPTION]
+ * InstructionType is an enum for all the instructions that our ram machine can have.
  * @author Ángel Igareta
  * @version 1.0
- * @since X-X-2018
+ * @since 14-2-2018
  */
 public enum InstructionType {
 	load,
@@ -25,6 +23,11 @@ public enum InstructionType {
 	
 	private OperatorType operatorType;
 	
+	/**
+	 * This method analyzes a raw operator and classify it's type using the
+	 * OperatorType Enum.
+	 * @param operatorName Raw operator.
+	 */
 	public void analyzeOperatorType(String operatorName) {
 		if (operatorName.matches("[0-9]*[a-zA-Z]+[0-9]*")) { // For being a TAG it must contain at least 1 char.
 			operatorType = OperatorType.TAG;
@@ -49,6 +52,9 @@ public enum InstructionType {
 		}
 	}
 	
+	/**
+	 * @return The OperatorType.
+	 */
 	public OperatorType getOperatorType() {
 		return operatorType;
 	}

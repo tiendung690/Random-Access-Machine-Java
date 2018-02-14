@@ -9,8 +9,8 @@ import daa.practice1.randomaccessmachine.memory.register.ProgramRegister;
 
 
 /**
- * Class that contains an array of the Program Register that the Random Access Machine
- * will use.
+ * The class ProgramMemory contains the Hash of lines-instruction that
+ * represents the program the machine is running.
  * @author Ángel Igareta
  * @version 1.0
  * @since 12-2-2018
@@ -21,7 +21,8 @@ public class ProgramMemory extends InfiniteMemory<ProgramRegister> {
 
 	/**
 	 * Constructor of the Program Memory. It reads all the lines in the program file and
-	 * charges them in the Array List of ProgramRegister.
+	 * charges them in the Hash Table of ProgramRegister. Besides, it inserts the tags
+	 * in the tagHash.
 	 * @param programFilename String that contains the name of the program file.
 	 * @throws IOException
 	 */
