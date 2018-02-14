@@ -17,8 +17,6 @@ public class DataMemory extends InfiniteMemory<DataRegister> {
 	 */
 	public DataMemory() {
 		super();
-		
-		// R0
 	}
 	
 	/* (non-Javadoc)
@@ -34,7 +32,7 @@ public class DataMemory extends InfiniteMemory<DataRegister> {
 	 */
 	@Override
 	public DataRegister getRegisterAt(int index) {
-		if (index < 0 || index >= memory.size()) {
+		if (!memory.containsKey(index)) {
 			setRegisterAt(index, new DataRegister());
 		}
 		return memory.get(getPosition(index));

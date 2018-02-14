@@ -29,7 +29,7 @@ public class DataRegister extends Register<Integer> {
 	 * Method to set a value of the register.
 	 * @param data Value to be set in the register.
 	 */
-	public void write(Integer data) { // TODO: WRITE OR SET?
+	public void set(Integer data) {
 		this.data = data;
 	}	
 }

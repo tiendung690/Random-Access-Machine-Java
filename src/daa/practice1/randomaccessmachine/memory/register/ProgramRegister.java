@@ -21,10 +21,10 @@ public class ProgramRegister extends Register<String> {
 		//	instructionType
 		//}
 		
-		analyzeInstructionType(data.split(" ")[0]);
+		analyzeInstructionType(data.split("[\t ]+")[0]);
 		
 		if (instructionType != InstructionType.halt) {
-			instructionType.analyzeOperatorType(data.split(" ")[1]);
+			instructionType.analyzeOperatorType(data.split("[\t ]+")[1]);
 		}
 	}
 

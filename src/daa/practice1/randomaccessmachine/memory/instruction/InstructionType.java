@@ -26,12 +26,12 @@ public enum InstructionType {
 	private OperatorType operatorType;
 	
 	public void analyzeOperatorType(String operatorName) {
-		if (operatorName.matches("[0-9]*[a-zA-Z]+[0-9]*")) {
+		if (operatorName.matches("[0-9]*[a-zA-Z]+[0-9]*")) { // For being a TAG it must contain at least 1 char.
 			operatorType = OperatorType.TAG;
 			operatorType.setTag(operatorName);
 		}
 		else {
-			int registerNumber = Integer.parseInt(operatorName.replaceAll("[\\D]", "")); // TODO: Throws error if there is a string		
+			int registerNumber = Integer.parseInt(operatorName.replaceAll("[\\D]", ""));	
 			
 			if (operatorName.startsWith("=")) {
 				operatorType = OperatorType.DIRECT_ADDRESSING;
