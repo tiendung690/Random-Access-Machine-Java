@@ -1,6 +1,7 @@
 /** File DataMemory. */
 package daa.practice1.randomaccessmachine.memory;
 
+import daa.practice1.randomaccessmachine.memory.register.DataRegister;
 
 /**
  * Class that contains an array of the Data Register that 

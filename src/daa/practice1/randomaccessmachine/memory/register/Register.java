@@ -1,5 +1,5 @@
 /** File Register. */
-package daa.practice1.randomaccessmachine.memory;
+package daa.practice1.randomaccessmachine.memory.register;
 
 
 /**

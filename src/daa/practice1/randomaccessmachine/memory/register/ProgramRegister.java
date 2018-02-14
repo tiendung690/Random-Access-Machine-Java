@@ -1,5 +1,5 @@
 /** File ProgramRegister. */
-package daa.practice1.randomaccessmachine.memory;
+package daa.practice1.randomaccessmachine.memory.register;
 
 import daa.practice1.randomaccessmachine.memory.instruction.InstructionType;
 
