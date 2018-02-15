@@ -3,7 +3,7 @@ package daa.practice1.randomaccessmachine.memory;
 
 /** Import the necessary classes for FileReader and BufferedReader.*/
 import java.io.*;
-import java.util.Hashtable;
+import java.util.*;
 
 import daa.practice1.randomaccessmachine.memory.register.ProgramRegister;
 
@@ -78,10 +78,15 @@ public class ProgramMemory extends InfiniteMemory<ProgramRegister> {
 	 */
 	@Override
 	public ProgramRegister getRegisterAt(int index) {
-		//if (index < 0 || index >= memory.size()) {
-		//	setRegisterAt(index, new ProgramRegister(""));
-		//}
 		return memory.get(getPosition(index));
+	}
+	
+	public Integer getFirstRegister() {
+		return memory.firstKey();
+	}
+	
+	public Integer getNextRegister(int index) {
+		return memory.higherKey(index);
 	}
 	
 	

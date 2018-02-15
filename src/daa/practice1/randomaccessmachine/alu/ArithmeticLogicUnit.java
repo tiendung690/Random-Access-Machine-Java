@@ -7,12 +7,12 @@ package daa.practice1.randomaccessmachine.alu;
  * @author angel
  *
  */
-public class ArithmeticLogicControlUnit {
+public class ArithmeticLogicUnit {
 
 	/**
 	 * 
 	 */
-	public ArithmeticLogicControlUnit() {
+	public ArithmeticLogicUnit() {
 		
 	}
 
