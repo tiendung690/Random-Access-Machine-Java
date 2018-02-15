@@ -34,22 +34,22 @@ public class ProgramMemory extends InfiniteMemory<ProgramRegister> {
 		int i = 1;
 		
 		while (reader.ready()) {
-			String newLine = reader.readLine().replaceFirst("\\s*", "");
+			String newLine = reader.readLine().trim();
 			
 			if (!newLine.startsWith("#") && !newLine.isEmpty()) { // Omit comments or blank lines
 				
 				String possibleTag = newLine.split("[\t ]+")[0];
 				if (possibleTag.endsWith(":")) { // Check for tags
 					tagHash.put(possibleTag, i);
-					newLine = newLine.replaceFirst(possibleTag, "").replaceFirst("[\t ]+", "");
+					newLine = newLine.replaceFirst(possibleTag, "").trim();
 				}
 				
-				//System.out.println(newLine.split("[\t ]+")[1]);
+				//System.out.println(newLine);
 				setRegisterAt(i, new ProgramRegister(newLine));
-//				System.out.println(i + ": " + getRegisterAt(i).getInstructionType().name() + " " +
-//						getRegisterAt(i).getInstructionType().getOperatorType().name() + " " +
-//						getRegisterAt(i).getInstructionType().getOperatorType().getTag() + " " +
-//						getRegisterAt(i).getInstructionType().getOperatorType().getRegisterNumber());
+				System.out.println(i + ": " + getRegisterAt(i).getInstructionType().name() + " " +
+						getRegisterAt(i).getInstructionType().getOperatorType().name() + " " +
+						getRegisterAt(i).getInstructionType().getOperatorType().getTag() + " " +
+						getRegisterAt(i).getInstructionType().getOperatorType().getRegisterNumber());
 			}			
 			i++;
 		}

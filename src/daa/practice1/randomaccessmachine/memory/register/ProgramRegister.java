@@ -36,44 +36,12 @@ public class ProgramRegister extends Register<String> {
 	 * @param Represents the instruction Name.
 	 */
 	private void analyzeInstructionType(String instructionName) {
-		switch(instructionName) {
-			case "load":
-			case "LOAD": instructionType = InstructionType.load; break;
-			
-			case "store":
-			case "STORE": instructionType = InstructionType.store; break;
-			
-			case "add":
-			case "ADD": instructionType = InstructionType.add; break;
-			
-			case "sub":
-			case "SUB": instructionType = InstructionType.sub; break;
-			
-			case "mul":
-			case "MUL": instructionType = InstructionType.mul; break;
-			
-			case "div":
-			case "DIV": instructionType = InstructionType.div; break;
-			
-			case "read":
-			case "READ": instructionType = InstructionType.read; break;
-			
-			case "write":
-			case "WRITE": instructionType = InstructionType.write; break;
-			
-			case "jump":
-			case "JUMP": instructionType = InstructionType.jump; break;
-			
-			case "jzero":
-			case "JZERO": instructionType = InstructionType.jzero; break;
-			
-			case "jgtz":
-			case "JGTZ": instructionType = InstructionType.jgtz; break;
-			
-			case "halt":
-			case "HALT": instructionType = InstructionType.halt; break;
-			
-			default: // Throw custom exception
+		
+		for (Enum instructionRealName : InstructionType.values()) {
+			if (instructionName.toLowerCase().equals(instructionRealName.name()) || 
+					instructionName.toUpperCase().equals(instructionRealName.name())) {
+				instructionType = InstructionType.valueOf(instructionRealName.name());
+			}
 		}
 	}	
 	
