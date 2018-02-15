@@ -5,10 +5,14 @@ package daa.practice1.randomaccessmachine;
 
 import java.io.IOException;
 import java.util.*;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import daa.practice1.randomaccessmachine.alu.ArithmeticLogicUnit;
 import daa.practice1.randomaccessmachine.io.*;
 import daa.practice1.randomaccessmachine.memory.*;
+import daa.practice1.randomaccessmachine.memory.instruction.*;
+import daa.practice1.randomaccessmachine.memory.register.*;
 
 /**
  * @author angel
@@ -35,10 +39,8 @@ public class RandomAccessMachine {
 	
 	private void start() throws IOException {
 		
-		while (IpIndex != null) { // TODO: OR HALT
-			
-			
-			//System.out.println(IpIndex);
+		while (IpIndex != null) {
+			executeInstruction(programMemory.getRegisterAt(IpIndex));
 			moveIP(programMemory.getNextRegister(IpIndex));
 		}
 		
@@ -46,18 +48,188 @@ public class RandomAccessMachine {
 		outputTape.close();
 	}
 	
-	private void moveIp() {
-		IpIndex++;
-	}
-	
-	private void moveIP(int nextIp) {
+	private void moveIP(Integer nextIp) {
 		IpIndex = nextIp;
 	}
 		
-	private void executeInstruction() {
+	private void executeInstruction(ProgramRegister currentInstruction) {
+		InstructionType instructionType = currentInstruction.getInstructionType();
 		
+		// Look for the method
+		try {
+			Method method = this.getClass().getDeclaredMethod(instructionType.name(), OperatorType.class);
+			method.invoke(this, instructionType.getOperatorType());
+		} catch (Exception e) {
+			System.out.println(e.getCause());
+		}
 	}
-		
+	
+	private void load(OperatorType operatorType) throws Exception {
+		switch (operatorType.name()) {
+			case "CONSTANT_ADDRESSING":
+
+			case "DIRECT_ADDRESSING":
+				
+				break;
+			case "INDIRECT_ADDRESSING":
+				
+				break;
+			case "TAG":
+				throw new Exception("Load can't have a tag as parameter.");
+		}
+	}
+	
+	private void store(OperatorType operatorType) throws Exception {
+		switch (operatorType.name()) {
+			case "CONSTANT_ADDRESSING":
+				
+				break;
+			case "DIRECT_ADDRESSING":
+				
+				break;
+			case "INDIRECT_ADDRESSING":
+				
+				break;
+			case "TAG":
+				throw new Exception("Store can't have a tag as parameter.");
+		}	
+	}
+	
+	private void add(OperatorType operatorType) throws Exception {
+		switch (operatorType.name()) {
+			case "CONSTANT_ADDRESSING":
+				
+				break;
+			case "DIRECT_ADDRESSING":
+				
+				break;
+			case "INDIRECT_ADDRESSING":
+				
+				break;
+			case "TAG":
+				throw new Exception("Add can't have a tag as parameter.");
+		}
+	}
+
+	private void sub(OperatorType operatorType) throws Exception {
+		switch (operatorType.name()) {
+			case "CONSTANT_ADDRESSING":
+				
+				break;
+			case "DIRECT_ADDRESSING":
+				
+				break;
+			case "INDIRECT_ADDRESSING":
+				
+				break;
+			case "TAG":
+				throw new Exception("Sub can't have a tag as parameter.");
+		}	
+	}
+	
+	private void mul(OperatorType operatorType) throws Exception {
+		switch (operatorType.name()) {
+			case "CONSTANT_ADDRESSING":
+				
+				break;
+			case "DIRECT_ADDRESSING":
+				
+				break;
+			case "INDIRECT_ADDRESSING":
+				
+				break;
+			case "TAG":
+				throw new Exception("Mul can't have a tag as parameter.");
+		}	
+	}
+	
+	private void div(OperatorType operatorType) throws Exception {
+		switch (operatorType.name()) {
+			case "CONSTANT_ADDRESSING":
+				
+				break;
+			case "DIRECT_ADDRESSING":
+				
+				break;
+			case "INDIRECT_ADDRESSING":
+				
+				break;
+			case "TAG":
+				throw new Exception("Div can't have a tag as parameter.");
+		}	
+	}
+	
+	private void read(OperatorType operatorType) throws Exception {
+		switch (operatorType.name()) {
+			case "CONSTANT_ADDRESSING":
+				
+				break;
+			case "DIRECT_ADDRESSING":
+				
+				break;
+			case "INDIRECT_ADDRESSING":
+				
+				break;
+			case "TAG":
+				throw new Exception("Read can't have a tag as parameter.");
+		}	
+	}
+	
+	private void write(OperatorType operatorType) throws Exception {
+		switch (operatorType.name()) {
+			case "CONSTANT_ADDRESSING":
+				
+				break;
+			case "DIRECT_ADDRESSING":
+				
+				break;
+			case "INDIRECT_ADDRESSING":
+				
+				break;
+			case "TAG":
+				throw new Exception("Write can't have a tag as parameter.");
+		}	
+	}
+	
+	private void jump(OperatorType operatorType) throws Exception {
+		switch (operatorType.name()) {
+			case "CONSTANT_ADDRESSING":
+				throw new Exception("Jump can't have an CONSTANT_ADDRESSING as parameter.");
+			case "DIRECT_ADDRESSING":
+				throw new Exception("Jump can't have an DIRECT_ADDRESSING as parameter.");
+			case "INDIRECT_ADDRESSING":
+				throw new Exception("Jump can't have an INDIRECT_ADDRESSING as parameter.");
+			case "TAG":
+		}	
+	}
+	
+	private void jzero(OperatorType operatorType) throws Exception {
+		switch (operatorType.name()) {
+			case "CONSTANT_ADDRESSING":
+				throw new Exception("Jzero can't have an CONSTANT_ADDRESSING as parameter.");
+			case "DIRECT_ADDRESSING":
+				throw new Exception("Jzero can't have an DIRECT_ADDRESSING as parameter.");
+			case "INDIRECT_ADDRESSING":
+				throw new Exception("Jzero can't have an INDIRECT_ADDRESSING as parameter.");
+			case "TAG":
+		}	
+	}
+	
+	private void jgtz(OperatorType operatorType) throws Exception {
+		switch (operatorType.name()) {
+			case "CONSTANT_ADDRESSING":
+				throw new Exception("Jgtz can't have an CONSTANT_ADDRESSING as parameter.");
+			case "DIRECT_ADDRESSING":
+				throw new Exception("Jgtz can't have an DIRECT_ADDRESSING as parameter.");
+			case "INDIRECT_ADDRESSING":
+				throw new Exception("Jgtz can't have an INDIRECT_ADDRESSING as parameter.");
+			case "TAG":
+		}	
+	}
+	
+	private void halt(OperatorType operatorType) throws Exception {
+		moveIP(programMemory.getLastRegister());
+	}	
 	
 	
 	/**

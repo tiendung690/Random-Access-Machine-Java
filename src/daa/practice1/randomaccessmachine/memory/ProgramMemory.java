@@ -46,10 +46,10 @@ public class ProgramMemory extends InfiniteMemory<ProgramRegister> {
 				
 				//System.out.println(newLine);
 				setRegisterAt(i, new ProgramRegister(newLine));
-				System.out.println(i + ": " + getRegisterAt(i).getInstructionType().name() + " " +
-						getRegisterAt(i).getInstructionType().getOperatorType().name() + " " +
-						getRegisterAt(i).getInstructionType().getOperatorType().getTag() + " " +
-						getRegisterAt(i).getInstructionType().getOperatorType().getRegisterNumber());
+//				System.out.println(i + ": " + getRegisterAt(i).getInstructionType().name() + " " +
+//						getRegisterAt(i).getInstructionType().getOperatorType().name() + " " +
+//						getRegisterAt(i).getInstructionType().getOperatorType().getTag() + " " +
+//						getRegisterAt(i).getInstructionType().getOperatorType().getRegisterNumber());
 			}			
 			i++;
 		}
@@ -83,6 +83,10 @@ public class ProgramMemory extends InfiniteMemory<ProgramRegister> {
 	
 	public Integer getFirstRegister() {
 		return memory.firstKey();
+	}
+	
+	public Integer getLastRegister() {
+		return memory.lastKey();
 	}
 	
 	public Integer getNextRegister(int index) {
