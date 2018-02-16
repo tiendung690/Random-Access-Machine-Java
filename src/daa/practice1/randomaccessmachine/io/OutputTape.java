@@ -29,11 +29,12 @@ public class OutputTape {
 	
 	/**
 	 * Writes a line to the buffer that contains text from the outputTape.
-	 * @param lineToWrite String that contains the line that is going to be written.
+	 * @param numberToWrite String that contains the line that is going to be written.
 	 * @throws IOException
 	 */
-	public void write(String lineToWrite) throws IOException {
-		outputTape.write(lineToWrite);
+	public void write(int numberToWrite) throws IOException {
+		outputTape.write(String.valueOf(numberToWrite));
+		outputTape.newLine();
 	}
 	
 	/**

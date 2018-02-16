@@ -32,8 +32,21 @@ public class InputTape {
 	 * @return String read in the file that contains the inputTape.
 	 * @throws IOException
 	 */
-	public String read() throws IOException {
-		return inputTape.readLine();
+	public Integer read() throws Exception {
+		String lineRead;
+		int returnValue;
+		
+		try {
+			lineRead = inputTape.readLine();
+			returnValue = Integer.parseInt(lineRead);
+		}
+		catch (IOException ioException) {
+			throw new Exception("There was a problem reading the number.");
+		}
+		catch (NumberFormatException nfException) {
+			throw new Exception("The read value is not a number.");
+		}
+		return returnValue;
 	}
 	
 	/**

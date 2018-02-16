@@ -20,22 +20,42 @@ public class ArithmeticLogicUnit {
 	}
 	
 	public void add(DataRegister register1, DataRegister register2) {
-		Integer sum = register1.get() + register2.get();
+		int sum = register1.get() + register2.get();
+		register1.set(sum);
+	}
+	
+	public void add(DataRegister register1, int constant) {
+		int sum = register1.get() + constant;
 		register1.set(sum);
 	}
 	
 	public void sub(DataRegister register1, DataRegister register2) {
-		Integer sub = register1.get() - register2.get();
+		int sub = register1.get() - register2.get();
+		register1.set(sub);
+	}
+	
+	public void sub(DataRegister register1, int constant) {
+		int sub = register1.get() - constant;
 		register1.set(sub);
 	}
 	
 	public void mul(DataRegister register1, DataRegister register2) {
-		Integer mul = register1.get() * register2.get();
+		int mul = register1.get() * register2.get();
+		register1.set(mul);
+	}
+	
+	public void mul(DataRegister register1, int constant) {
+		int mul = register1.get() * constant;
 		register1.set(mul);
 	}
 	
 	public void div(DataRegister register1, DataRegister register2) {
-		Integer div = register1.get() / register2.get();
+		int div = register1.get() / register2.get();
+		register1.set(div);
+	}
+	
+	public void div(DataRegister register1, int constant) {
+		int div = register1.get() / constant;
 		register1.set(div);
 	}
 
