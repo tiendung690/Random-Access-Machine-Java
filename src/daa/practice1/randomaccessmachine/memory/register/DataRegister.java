@@ -32,4 +32,8 @@ public class DataRegister extends Register<Integer> {
 	public void set(Integer data) {
 		this.data = data;
 	}	
+	
+	public String toString() {
+		return data.toString(); 
+	}
 }

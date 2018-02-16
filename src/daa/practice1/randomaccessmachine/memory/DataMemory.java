@@ -39,6 +39,7 @@ public class DataMemory extends InfiniteMemory<DataRegister> {
 	}
 	
 	public DataRegister getACC() {
-		return memory.get(getPosition(0));
+		return getRegisterAt(0);
 	}
+	
 }

@@ -14,34 +14,38 @@ import daa.practice1.randomaccessmachine.memory.*;
 import daa.practice1.randomaccessmachine.memory.instruction.*;
 import daa.practice1.randomaccessmachine.memory.register.*;
 
-/**
- * @author angel
- *
- */
+
 public class RandomAccessMachine {
 	
-	private Integer IpIndex;
+	private Integer ipIndex;
 	private ArithmeticLogicUnit alu;
+	
 	private ProgramMemory programMemory;
 	private DataMemory dataMemory;
+	
 	private InputTape inputTape;	
 	private OutputTape outputTape;
+	
+	private boolean debug;
 	
 	public RandomAccessMachine(String programFilename, String inputTapeFilename, 
 			String outputTapeFilename, boolean debug) throws IOException {
 		
-		programMemory = new ProgramMemory(programFilename);
-		inputTape = new InputTape(inputTapeFilename);		
-		outputTape = new OutputTape(outputTapeFilename);
+		this.alu = new ArithmeticLogicUnit();
+		this.dataMemory = new DataMemory();
+		this.programMemory = new ProgramMemory(programFilename);
+		this.inputTape = new InputTape(inputTapeFilename);		
+		this.outputTape = new OutputTape(outputTapeFilename);
 		
-		IpIndex = programMemory.getFirstRegister();
+		this.ipIndex = programMemory.getFirstRegister();
+		this.debug = debug;
 	}
 	
-	private void start() throws IOException {
+	public void start() throws IOException {
 		
-		while (IpIndex != null) {
-			executeInstruction(programMemory.getRegisterAt(IpIndex));
-			moveIP(programMemory.getNextRegister(IpIndex));
+		while (ipIndex != null) {
+			executeInstruction(programMemory.getRegisterAt(ipIndex));
+			moveIP(programMemory.getNextRegister(ipIndex));
 		}
 		
 		inputTape.close();
@@ -49,7 +53,7 @@ public class RandomAccessMachine {
 	}
 	
 	private void moveIP(Integer nextIp) {
-		IpIndex = nextIp;
+		ipIndex = nextIp;
 	}
 		
 	private void executeInstruction(ProgramRegister currentInstruction) {
@@ -57,142 +61,193 @@ public class RandomAccessMachine {
 		
 		// Look for the method
 		try {
-			Method method = this.getClass().getDeclaredMethod(instructionType.name(), OperatorType.class);
-			method.invoke(this, instructionType.getOperatorType());
+			Method method = this.getClass().getDeclaredMethod(instructionType.name(), Operating.class);
+			method.invoke(this, currentInstruction.getOperating());
+			
+			if (debug) {
+				System.out.println("IP: " + ipIndex);
+				System.out.println("Instruction: " + programMemory.getRegisterAt(ipIndex).get());
+				showRegisters();
+			}			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
-	private void load(OperatorType operatorType) throws Exception {
-		switch (operatorType.name()) {
-			case "CONSTANT_ADDRESSING":
+	private void showRegisters() {
+		for (int i = 0; i < 10; ++i) {
+			System.out.print("R" + i + ": "+ dataMemory.getRegisterAt(i) + " | ");
+		}
+		System.out.println(" ");
+		System.out.println(" ");
+	}
+	
+	private int resolveIndirectAddressing(int iValue) {
+		return dataMemory.getRegisterAt(iValue).get();
+	}
 
+	private void load(Operating operating) throws Exception {
+		switch (operating.getOperatingName()) {
+			case "CONSTANT_ADDRESSING":
+				alu.assign(dataMemory.getACC(), operating.getRegisterNumber());
+				break;
+				
 			case "DIRECT_ADDRESSING":
-				
+				int iValue = operating.getRegisterNumber();
+				alu.assign(dataMemory.getACC(), dataMemory.getRegisterAt(iValue).get());
 				break;
+				
 			case "INDIRECT_ADDRESSING":
-				
+				int jValue = resolveIndirectAddressing(operating.getRegisterNumber());
+				alu.assign(dataMemory.getACC(), dataMemory.getRegisterAt(jValue).get());
 				break;
+				
 			case "TAG":
 				throw new Exception("Load can't have a tag as parameter.");
 		}
 	}
 	
-	private void store(OperatorType operatorType) throws Exception {
-		switch (operatorType.name()) {
+	private void store(Operating operating) throws Exception {
+		switch (operating.getOperatingName()) {
 			case "CONSTANT_ADDRESSING":
+				throw new Exception("Store can't have a constant addressing.");
 				
-				break;
 			case "DIRECT_ADDRESSING":
-				
+				int iValue = operating.getRegisterNumber();
+				alu.assign(dataMemory.getRegisterAt(iValue), dataMemory.getACC().get());
 				break;
-			case "INDIRECT_ADDRESSING":
 				
+			case "INDIRECT_ADDRESSING":
+				int jValue = resolveIndirectAddressing(operating.getRegisterNumber());
+				alu.assign(dataMemory.getRegisterAt(jValue), dataMemory.getACC().get());
 				break;
 			case "TAG":
 				throw new Exception("Store can't have a tag as parameter.");
 		}	
 	}
 	
-	private void add(OperatorType operatorType) throws Exception {
-		switch (operatorType.name()) {
+	private void add(Operating operating) throws Exception {
+		switch (operating.getOperatingName()) {
 			case "CONSTANT_ADDRESSING":
-				
+				alu.assign(dataMemory.getACC(), operating.getRegisterNumber());
 				break;
+				
 			case "DIRECT_ADDRESSING":
-				
+				int iValue = operating.getRegisterNumber();
+				alu.assign(dataMemory.getACC(), dataMemory.getRegisterAt(iValue).get());
 				break;
-			case "INDIRECT_ADDRESSING":
 				
+			case "INDIRECT_ADDRESSING":
+				int jValue = resolveIndirectAddressing(operating.getRegisterNumber());
+				alu.assign(dataMemory.getACC(), dataMemory.getRegisterAt(jValue).get());
 				break;
 			case "TAG":
 				throw new Exception("Add can't have a tag as parameter.");
 		}
 	}
 
-	private void sub(OperatorType operatorType) throws Exception {
-		switch (operatorType.name()) {
+	private void sub(Operating operating) throws Exception {
+		switch (operating.getOperatingName()) {
 			case "CONSTANT_ADDRESSING":
-				
+				alu.assign(dataMemory.getACC(), operating.getRegisterNumber());
 				break;
+				
 			case "DIRECT_ADDRESSING":
-				
+				int iValue = operating.getRegisterNumber();
+				alu.assign(dataMemory.getACC(), dataMemory.getRegisterAt(iValue).get());
 				break;
-			case "INDIRECT_ADDRESSING":
 				
+			case "INDIRECT_ADDRESSING":
+				int jValue = resolveIndirectAddressing(operating.getRegisterNumber());
+				alu.assign(dataMemory.getACC(), dataMemory.getRegisterAt(jValue).get());
 				break;
 			case "TAG":
 				throw new Exception("Sub can't have a tag as parameter.");
 		}	
 	}
 	
-	private void mul(OperatorType operatorType) throws Exception {
-		switch (operatorType.name()) {
+	private void mul(Operating operating) throws Exception {
+		switch (operating.getOperatingName()) {
 			case "CONSTANT_ADDRESSING":
-				
+				alu.assign(dataMemory.getACC(), operating.getRegisterNumber());
 				break;
+				
 			case "DIRECT_ADDRESSING":
-				
+				int iValue = operating.getRegisterNumber();
+				alu.assign(dataMemory.getACC(), dataMemory.getRegisterAt(iValue).get());
 				break;
-			case "INDIRECT_ADDRESSING":
 				
+			case "INDIRECT_ADDRESSING":
+				int jValue = resolveIndirectAddressing(operating.getRegisterNumber());
+				alu.assign(dataMemory.getACC(), dataMemory.getRegisterAt(jValue).get());
 				break;
 			case "TAG":
 				throw new Exception("Mul can't have a tag as parameter.");
 		}	
 	}
 	
-	private void div(OperatorType operatorType) throws Exception {
-		switch (operatorType.name()) {
+	private void div(Operating operating) throws Exception {
+		switch (operating.getOperatingName()) {
 			case "CONSTANT_ADDRESSING":
-				
+				alu.assign(dataMemory.getACC(), operating.getRegisterNumber());
 				break;
+				
 			case "DIRECT_ADDRESSING":
-				
+				int iValue = operating.getRegisterNumber();
+				alu.assign(dataMemory.getACC(), dataMemory.getRegisterAt(iValue).get());
 				break;
-			case "INDIRECT_ADDRESSING":
 				
+			case "INDIRECT_ADDRESSING":
+				int jValue = resolveIndirectAddressing(operating.getRegisterNumber());
+				alu.assign(dataMemory.getACC(), dataMemory.getRegisterAt(jValue).get());
 				break;
 			case "TAG":
 				throw new Exception("Div can't have a tag as parameter.");
 		}	
 	}
 	
-	private void read(OperatorType operatorType) throws Exception {
-		switch (operatorType.name()) {
+	private void read(Operating operating) throws Exception {
+		switch (operating.getOperatingName()) {
 			case "CONSTANT_ADDRESSING":
-				
+				alu.assign(dataMemory.getACC(), operating.getRegisterNumber());
 				break;
+				
 			case "DIRECT_ADDRESSING":
-				
+				int iValue = operating.getRegisterNumber();
+				alu.assign(dataMemory.getACC(), dataMemory.getRegisterAt(iValue).get());
 				break;
-			case "INDIRECT_ADDRESSING":
 				
+			case "INDIRECT_ADDRESSING":
+				int jValue = resolveIndirectAddressing(operating.getRegisterNumber());
+				alu.assign(dataMemory.getACC(), dataMemory.getRegisterAt(jValue).get());
 				break;
 			case "TAG":
 				throw new Exception("Read can't have a tag as parameter.");
 		}	
 	}
 	
-	private void write(OperatorType operatorType) throws Exception {
-		switch (operatorType.name()) {
+	private void write(Operating operating) throws Exception {
+		switch (operating.getOperatingName()) {
 			case "CONSTANT_ADDRESSING":
-				
+				alu.assign(dataMemory.getACC(), operating.getRegisterNumber());
 				break;
+				
 			case "DIRECT_ADDRESSING":
-				
+				int iValue = operating.getRegisterNumber();
+				alu.assign(dataMemory.getACC(), dataMemory.getRegisterAt(iValue).get());
 				break;
-			case "INDIRECT_ADDRESSING":
 				
+			case "INDIRECT_ADDRESSING":
+				int jValue = resolveIndirectAddressing(operating.getRegisterNumber());
+				alu.assign(dataMemory.getACC(), dataMemory.getRegisterAt(jValue).get());
 				break;
 			case "TAG":
 				throw new Exception("Write can't have a tag as parameter.");
 		}	
 	}
 	
-	private void jump(OperatorType operatorType) throws Exception {
-		switch (operatorType.name()) {
+	private void jump(Operating operating) throws Exception {
+		switch (operating.getOperatingName()) {
 			case "CONSTANT_ADDRESSING":
 				throw new Exception("Jump can't have an CONSTANT_ADDRESSING as parameter.");
 			case "DIRECT_ADDRESSING":
@@ -200,13 +255,13 @@ public class RandomAccessMachine {
 			case "INDIRECT_ADDRESSING":
 				throw new Exception("Jump can't have an INDIRECT_ADDRESSING as parameter.");
 			case "TAG":
-				String tagForJump = operatorType.getTag();
+				String tagForJump = operating.getTag();
 				moveIP(programMemory.getLineOfTag(tagForJump));
 		}	
 	}
 	
-	private void jzero(OperatorType operatorType) throws Exception {
-		switch (operatorType.name()) {
+	private void jzero(Operating operating) throws Exception {
+		switch (operating.getOperatingName()) {
 			case "CONSTANT_ADDRESSING":
 				throw new Exception("Jzero can't have an CONSTANT_ADDRESSING as parameter.");
 			case "DIRECT_ADDRESSING":
@@ -214,15 +269,15 @@ public class RandomAccessMachine {
 			case "INDIRECT_ADDRESSING":
 				throw new Exception("Jzero can't have an INDIRECT_ADDRESSING as parameter.");
 			case "TAG":
-				String tagForJump = operatorType.getTag();
-				if (dataMemory.getACC().read() == 0) {
+				String tagForJump = operating.getTag();
+				if (dataMemory.getACC().get() == 0) {
 					moveIP(programMemory.getLineOfTag(tagForJump));					
 				}
 		}	
 	}
 	
-	private void jgtz(OperatorType operatorType) throws Exception {
-		switch (operatorType.name()) {
+	private void jgtz(Operating operating) throws Exception {
+		switch (operating.getOperatingName()) {
 			case "CONSTANT_ADDRESSING":
 				throw new Exception("Jgtz can't have an CONSTANT_ADDRESSING as parameter.");
 			case "DIRECT_ADDRESSING":
@@ -230,14 +285,14 @@ public class RandomAccessMachine {
 			case "INDIRECT_ADDRESSING":
 				throw new Exception("Jgtz can't have an INDIRECT_ADDRESSING as parameter.");
 			case "TAG":
-				String tagForJump = operatorType.getTag();
-				if (dataMemory.getACC().read() > 0) {
+				String tagForJump = operating.getTag();
+				if (dataMemory.getACC().get() > 0) {
 					moveIP(programMemory.getLineOfTag(tagForJump));					
 				}
 		}	
 	}
 	
-	private void halt(OperatorType operatorType) throws Exception {
+	private void halt(Operating operating) throws Exception {
 		moveIP(programMemory.getLastRegister());
 	}	
 	

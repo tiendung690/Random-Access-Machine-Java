@@ -42,7 +42,6 @@ public class ProgramMemory extends InfiniteMemory<ProgramRegister> {
 				if (possibleTag.endsWith(":")) { // Check for tags
 					tagHash.put(possibleTag.replace(":", ""), i);
 					newLine = newLine.replaceFirst(possibleTag, "").trim();
-					//System.out.println(possibleTag.replace(":", "") + " in line " + i); 
 				}
 				
 				//System.out.println(newLine);

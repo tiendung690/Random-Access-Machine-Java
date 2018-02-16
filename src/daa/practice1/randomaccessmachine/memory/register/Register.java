@@ -26,7 +26,7 @@ public abstract class Register<T> {
 	 * Method to read the data from the Register.
 	 * @return Data Data of the register.
 	 */
-	public T read() {
+	public T get() {
 		return data;
 	}
 }

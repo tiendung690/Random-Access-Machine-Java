@@ -1,0 +1,11 @@
+# Programa que lee los elementos la cinta de entrada hasta
+# que encuentre un 0 y copia los valores leídos a la cinta
+# de salida (el valor 0 no se copia)
+
+load =1
+load =2
+load 3
+load 4
+load *5
+load *6
+halt
