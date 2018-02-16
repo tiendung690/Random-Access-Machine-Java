@@ -40,8 +40,9 @@ public class ProgramMemory extends InfiniteMemory<ProgramRegister> {
 				
 				String possibleTag = newLine.split("[\t ]+")[0];
 				if (possibleTag.endsWith(":")) { // Check for tags
-					tagHash.put(possibleTag, i);
+					tagHash.put(possibleTag.replace(":", ""), i);
 					newLine = newLine.replaceFirst(possibleTag, "").trim();
+					//System.out.println(possibleTag.replace(":", "") + " in line " + i); 
 				}
 				
 				//System.out.println(newLine);
@@ -61,8 +62,11 @@ public class ProgramMemory extends InfiniteMemory<ProgramRegister> {
 	 * @param tagName Name of the tag.
 	 * @return Line of the tag passed by argument.
 	 */
-	public int getLineOfTag(String tagName) {
-		return tagHash.get(tagName); //TODO: Throw error
+	public int getLineOfTag(String tagName) throws Exception {
+		if (!tagHash.containsKey(tagName)) {
+			throw new Exception("Tag " + tagName + " doesn't exist.");
+		}
+		return tagHash.get(tagName);
 	}
 
 	/* (non-Javadoc)

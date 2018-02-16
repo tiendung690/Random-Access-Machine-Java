@@ -60,7 +60,7 @@ public class RandomAccessMachine {
 			Method method = this.getClass().getDeclaredMethod(instructionType.name(), OperatorType.class);
 			method.invoke(this, instructionType.getOperatorType());
 		} catch (Exception e) {
-			System.out.println(e.getCause());
+			e.printStackTrace();
 		}
 	}
 	
@@ -200,6 +200,8 @@ public class RandomAccessMachine {
 			case "INDIRECT_ADDRESSING":
 				throw new Exception("Jump can't have an INDIRECT_ADDRESSING as parameter.");
 			case "TAG":
+				String tagForJump = operatorType.getTag();
+				moveIP(programMemory.getLineOfTag(tagForJump));
 		}	
 	}
 	
@@ -212,6 +214,10 @@ public class RandomAccessMachine {
 			case "INDIRECT_ADDRESSING":
 				throw new Exception("Jzero can't have an INDIRECT_ADDRESSING as parameter.");
 			case "TAG":
+				String tagForJump = operatorType.getTag();
+				if (dataMemory.getACC().read() == 0) {
+					moveIP(programMemory.getLineOfTag(tagForJump));					
+				}
 		}	
 	}
 	
@@ -224,6 +230,10 @@ public class RandomAccessMachine {
 			case "INDIRECT_ADDRESSING":
 				throw new Exception("Jgtz can't have an INDIRECT_ADDRESSING as parameter.");
 			case "TAG":
+				String tagForJump = operatorType.getTag();
+				if (dataMemory.getACC().read() > 0) {
+					moveIP(programMemory.getLineOfTag(tagForJump));					
+				}
 		}	
 	}
 	
