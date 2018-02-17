@@ -43,13 +43,12 @@ public class ProgramMemory extends InfiniteMemory<ProgramRegister> {
 					tagHash.put(possibleTag.replace(":", ""), i);
 					newLine = newLine.replaceFirst(possibleTag, "").trim();
 				}
-				
-				//System.out.println(newLine);
-				setRegisterAt(i, new ProgramRegister(newLine));
-//				System.out.println(i + ": " + getRegisterAt(i).getInstructionType().name() + " " +
-//						getRegisterAt(i).getInstructionType().getOperatorType().name() + " " +
-//						getRegisterAt(i).getInstructionType().getOperatorType().getTag() + " " +
-//						getRegisterAt(i).getInstructionType().getOperatorType().getRegisterNumber());
+				try {
+					setRegisterAt(i, new ProgramRegister(newLine));					
+				}
+				catch (Exception e) {
+					throw new Exception("In line " + i + ": " + e.getMessage());
+				}
 			}			
 			i++;
 		}

@@ -26,11 +26,16 @@ public class ProgramRegister extends Register<String> {
 	 */
 	public ProgramRegister(String data) throws Exception {
 		super(data);
+		
+		// If there is something apart from the instruction and the operand
+		if (data.split("[\t ]+").length > 2) {
+			throw new Exception("The instruction '" + data + "' has more than 1 operand.");
+		}
 
 		analyzeInstructionType(data.split("[\t ]+")[0]);
 		
 		if (instructionType == null) {
-			throw new Exception("The instruction doesn't exist: " + data);
+			throw new Exception("The instruction '" + data + "' doesn't exist.");
 		}
 
 		if (instructionType != InstructionType.halt) {
