@@ -24,10 +24,14 @@ public class ProgramRegister extends Register<String> {
 	 * @param data
 	 *          Raw instruction.
 	 */
-	public ProgramRegister(String data) {
+	public ProgramRegister(String data) throws Exception {
 		super(data);
 
 		analyzeInstructionType(data.split("[\t ]+")[0]);
+		
+		if (instructionType == null) {
+			throw new Exception("The instruction doesn't exist: " + data);
+		}
 
 		if (instructionType != InstructionType.halt) {
 			operating = new Operating(data.split("[\t ]+")[1]);

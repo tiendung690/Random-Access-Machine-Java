@@ -1,6 +1,5 @@
 package daa.practice1.randomaccessmachine.alu;
 
-import daa.practice1.randomaccessmachine.memory.DataMemory;
 import daa.practice1.randomaccessmachine.memory.register.DataRegister;
 
 /**

@@ -27,32 +27,31 @@ public class RandomAccessMachine {
 	private boolean debug;
 	
 	public RandomAccessMachine(String programFilename, String inputTapeFilename, 
-			String outputTapeFilename, boolean debug) throws IOException {
+			String outputTapeFilename, boolean debug) throws Exception {
 		
 		this.alu = new ArithmeticLogicUnit();
 		this.dataMemory = new DataMemory();
+		
 		this.programMemory = new ProgramMemory(programFilename);
 		this.inputTape = new InputTape(inputTapeFilename);		
 		this.outputTape = new OutputTape(outputTapeFilename);
 		
-		this.ipIndex = programMemory.getFirstRegister();
 		this.debug = debug;
+		this.ipIndex = programMemory.getFirstRegister();
 	}
 	
 	public void start() throws IOException {
-		
-		try {
-			
+		try {			
 			while (ipIndex != null) {
 				executeInstruction(programMemory.getRegisterAt(ipIndex));
 			}
-			
-			inputTape.close();
-			outputTape.close();
 		}
 		catch (Exception e) {
-			System.out.println("ERROR in line " + ipIndex + ": " + e.getCause());
+			System.out.println("ERROR in line " + ipIndex + ": " + e.getMessage());
 		}
+		
+		inputTape.close();
+		outputTape.close();
 	}
 	
 	private void moveIP(Integer nextIp) {
@@ -256,11 +255,9 @@ public class RandomAccessMachine {
 				if (iValue == 0) {
 					throw new Exception("The ACC value can't be assigned to the outputTape.");
 				}
-				else {
-					alu.assign(dataMemory.getRegisterAt(iValue), inputTape.read());					
-				}
-				
-				outputTape.write(dataMemory.getRegisterAt(iValue).get());
+				else {			
+					outputTape.write(dataMemory.getRegisterAt(iValue).get());
+				}				
 				break;
 				
 			case "INDIRECT_ADDRESSING":
@@ -269,11 +266,10 @@ public class RandomAccessMachine {
 				if (jValue == 0) {
 					throw new Exception("The ACC value can't be assigned to the outputTape.");
 				}
-				else {
-					alu.assign(dataMemory.getRegisterAt(jValue), inputTape.read());			
+				else {		
+					outputTape.write(dataMemory.getRegisterAt(jValue).get());
 				}	
 				
-				outputTape.write(dataMemory.getRegisterAt(jValue).get());
 				break;
 			case "TAG":
 				throw new Exception("Write can't have a tag as parameter.");
@@ -341,12 +337,12 @@ public class RandomAccessMachine {
 	/**
 	 * @return Help of the RandomAccessMachine program call.
 	 */
-	private static String showHelp() {
-		return "This program recieves 3 arguments and 1 option: " + System.lineSeparator()
+	private static void showHelp() {
+		System.out.print("This program recieves 3 arguments and 1 option: " + System.lineSeparator()
 				+ "The first argument is the file that contains the program." + System.lineSeparator()
 				+ "The second argument is the file that contains the inputfile." + System.lineSeparator()
 				+ "The third argument is the file that contains the outputfile." + System.lineSeparator()
-				+ "The fourth argument is the debug option. You can call it as --debug or -d";
+				+ "The fourth argument is the debug option. You can call it as --debug or -d");
 	}
 
 	/**
@@ -358,14 +354,24 @@ public class RandomAccessMachine {
 	 * 	4. The fourth argument is the debug option.
 	 * @throws IOException 
 	 */
-	public static void main(String[] args) throws IllegalArgumentException, IOException { // TODO: Handle exceptions
+	public static void main(String[] args) {
 		if ((args.length != 3) && (args.length != 4)) {
-			throw new IllegalArgumentException(showHelp());
+			System.out.println("ERROR: Invalid number of arguments");
+			showHelp();
 		}
 		else {
-			boolean debug = (args.length != 3) ? true : false;
-			RandomAccessMachine ram = new RandomAccessMachine(args[0], args[1], args[2], debug);
-			ram.start();
+			boolean debug = ((args.length != 3) && (args[3].equals("debug"))) ? true : false;
+			
+			try {
+				RandomAccessMachine ram = new RandomAccessMachine(args[0], args[1], args[2], debug);
+				ram.start();				
+			}
+			catch (IOException e) {
+				System.out.println("IOException reading the files:" + e.getMessage());
+			}
+			catch (Exception e) {
+				System.out.println("Error reading the Program file: " + e.getMessage());
+			}		
 		}		
 	}
 }

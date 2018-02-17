@@ -26,7 +26,7 @@ public class ProgramMemory extends InfiniteMemory<ProgramRegister> {
 	 * @param programFilename String that contains the name of the program file.
 	 * @throws IOException
 	 */
-	public ProgramMemory(String programFilename) throws IOException {
+	public ProgramMemory(String programFilename) throws Exception {
 		super();
 		
 		BufferedReader reader = new BufferedReader(new FileReader(programFilename));

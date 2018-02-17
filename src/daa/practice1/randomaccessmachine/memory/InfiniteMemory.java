@@ -17,8 +17,8 @@ public abstract class InfiniteMemory<T> {
 
 	/** Generic ArrayList. */
 	protected TreeMap<Integer, T> memory;
-	/** Constant that defines the minimum value of the memory. */
-	private final int MAX_CAPACITY = new Double(Math.pow(10, 7)).intValue(); // TODO: Worth it?
+	/** Constant that defines the minimum value of the memory to simulate the infinity. */
+	private final int MAX_CAPACITY = new Double(Math.pow(10, 7)).intValue();
 	
 	/**
 	 * Constructor of the InfiniteMemory class. It creates the instance of the
