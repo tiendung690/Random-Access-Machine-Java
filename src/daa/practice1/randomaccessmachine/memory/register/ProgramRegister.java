@@ -15,6 +15,7 @@ public class ProgramRegister extends Register<String> {
 
 	/** String that represent the Type of instruction the line contains. */
 	private InstructionType instructionType;
+	/** Operating object that represents the operating of the instruction. */
 	private Operating operating;
 
 	/**
@@ -23,6 +24,12 @@ public class ProgramRegister extends Register<String> {
 	 * 
 	 * @param data
 	 *          Raw instruction.
+	 * 
+	 * @throws Exception
+	 *           Throws exception if the instruction doesn't exist, if it has more
+	 *           than one operand and it's not a comment or if the operand is
+	 *           invalid.
+	 * 
 	 */
 	public ProgramRegister(String data) throws Exception {
 		super(data);
@@ -32,10 +39,10 @@ public class ProgramRegister extends Register<String> {
 
 		if (instructionType == null) {
 			throw new Exception("The instruction '" + data + "' doesn't exist.");
-		} 
+		}
 		else if ((instructionType == InstructionType.halt) && (splittedData.length > 1)
 				&& !splittedData[1].startsWith("#")) {
-			throw new Exception("The instruction '" + data + "' has more than 1 operand.");
+			throw new Exception("The instruction '" + data + "' can't have an operand.");
 		}
 		else if (instructionType != InstructionType.halt) {
 			if ((splittedData.length > 2) && !splittedData[2].startsWith("#")) {
@@ -45,7 +52,7 @@ public class ProgramRegister extends Register<String> {
 				try {
 					operating = new Operating(splittedData[1]);
 				}
-				catch (NumberFormatException e) {				
+				catch (NumberFormatException e) {
 					throw new Exception("The instruction '" + data + "' has an invalid operand.");
 				}
 			}
@@ -56,7 +63,9 @@ public class ProgramRegister extends Register<String> {
 	}
 
 	/**
-	 * Method to classify the instruction depending on it's name.
+	 * Method to classify the instruction depending on it's name. It iterates from
+	 * the Enum InstructionType and see if a instruction matches. It is case
+	 * insensitive.
 	 * 
 	 * @param Represents
 	 *          the instruction Name.
@@ -80,6 +89,8 @@ public class ProgramRegister extends Register<String> {
 	}
 
 	/**
+	 * Getter of the Operating.
+	 * 
 	 * @return The Operating.
 	 */
 	public Operating getOperating() {
