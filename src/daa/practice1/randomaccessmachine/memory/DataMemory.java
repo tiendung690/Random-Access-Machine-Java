@@ -1,6 +1,8 @@
 /** File DataMemory. */
 package daa.practice1.randomaccessmachine.memory;
 
+import java.util.TreeMap;
+
 import daa.practice1.randomaccessmachine.memory.register.DataRegister;
 
 /**
@@ -13,12 +15,16 @@ import daa.practice1.randomaccessmachine.memory.register.DataRegister;
  */
 public class DataMemory extends InfiniteMemory<DataRegister> {
 
+	/** Log of used Registers */
+	private TreeMap<Integer, DataRegister> usedRegisters;
+	
 	/**
 	 * Constructor that only calls it's superclass constructor to initialize the
 	 * memory.
 	 */
 	public DataMemory() {
 		super();
+		usedRegisters = new TreeMap<Integer, DataRegister>();
 	}
 
 	/*
@@ -36,8 +42,19 @@ public class DataMemory extends InfiniteMemory<DataRegister> {
 		if (index < 0) {
 			throw new Exception("Can't access a negative register.");
 		}
-
+		
+		if (!usedRegisters.containsKey(index)) {
+			usedRegisters.put(index, data);			
+		}
+		
 		memory.put(getMemoryPosition(index), data);
+	}
+
+	/**
+	 * @return the usedRegisters
+	 */
+	public TreeMap<Integer, DataRegister> getUsedRegisters() {
+		return usedRegisters;
 	}
 
 	/*
@@ -57,8 +74,8 @@ public class DataMemory extends InfiniteMemory<DataRegister> {
 
 		if (!memory.containsKey(index)) {
 			setRegisterAt(index, new DataRegister());
-		}
-
+		}		
+		
 		return memory.get(getMemoryPosition(index));
 	}
 

@@ -3,6 +3,7 @@ package daa.practice1.randomaccessmachine;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.TreeMap;
 
 import daa.practice1.randomaccessmachine.alu.ArithmeticLogicUnit;
 import daa.practice1.randomaccessmachine.io.*;
@@ -32,6 +33,8 @@ public class RandomAccessMachine {
 	private InputTape inputTape;
 	/** OutputTape that represents the buffer where the Machine will write to. */
 	private OutputTape outputTape;
+	/** Counter of the executed instructions. */
+	private int instructionCounter;
 
 	/**
 	 * Constructor that initialize the private variables previously explained.
@@ -65,16 +68,11 @@ public class RandomAccessMachine {
 	public void start(boolean debug) throws IOException {
 		try {
 			while (ipIndex != null) {
-				if (debug) {
-					System.out.println("IP: " + ipIndex);
-					System.out.println("Instruction: " + programMemory.getRegisterAt(ipIndex).get());
+				if (debug) { 
+					showExecution();
 				}
-
 				executeInstruction(debug);
-
-				if (debug) {
-					showRegisters();
-				}
+				instructionCounter++;
 			}
 		}
 		catch (Exception e) {
@@ -116,18 +114,53 @@ public class RandomAccessMachine {
 		Method method = this.getClass().getDeclaredMethod(instructionType.name(), Operating.class);
 		method.invoke(this, currentInstruction.getOperating());
 	}
+	
+	private void showExecution() throws Exception {
+		System.out.println("---------------------");
+		System.out.println("RANDOM ACCESS MACHINE");
+		System.out.println("---------------------" + System.lineSeparator());
+		
+		System.out.println("*DATA REGISTERS*");
+		showDataRegisters();
+		System.out.println(" ");
+		
+		System.out.println("*PROGRAM REGISTERS*");
+		showProgramRegisters();
+		System.out.println(" ");
+		
+		System.out.println("*Number of instructions executed: " + instructionCounter);
+		System.out.println("*IP Index: " + ipIndex);
+		System.out.println("*Current Instruction: " + programMemory.getRegisterAt(ipIndex).get());
+		System.out.println(System.lineSeparator() +	System.lineSeparator());
+	}
 
 	/**
-	 * Visual Representation of the Registers.
+	 * Visual Representation of the Data Registers.
 	 * 
 	 * @throws Exception
 	 */
-	private void showRegisters() throws Exception {
-		for (int i = 0; i < 10; ++i) {
-			System.out.print("R" + i + ": " + dataMemory.getRegisterAt(i) + " | ");
+	private void showDataRegisters() throws Exception {
+		TreeMap<Integer, DataRegister> usedRegisters = dataMemory.getUsedRegisters();
+		
+		for (Integer index : usedRegisters.keySet()) {
+			System.out.println("R[" + index + "]= " + dataMemory.getRegisterAt(index));
 		}
-		System.out.println(" ");
-		System.out.println(" ");
+		
+		System.out.println("...");
+	}
+	
+	/**
+	 * Visual Representation of the Program Registers.
+	 * 
+	 * @throws Exception
+	 */
+	private void showProgramRegisters() throws Exception {
+		int index = programMemory.getFirstRegister();
+		int lastIndex = programMemory.getLastRegister();
+		
+		while (index <= lastIndex) {
+			System.out.println("P[" + index + "]= " + programMemory.getRegisterAt(index++).get());
+		}
 	}
 
 	/**
