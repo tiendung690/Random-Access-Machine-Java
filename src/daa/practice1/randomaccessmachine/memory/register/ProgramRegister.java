@@ -26,20 +26,32 @@ public class ProgramRegister extends Register<String> {
 	 */
 	public ProgramRegister(String data) throws Exception {
 		super(data);
-		
-		// If there is something apart from the instruction and the operand
-		if (data.split("[\t ]+").length > 2) {
-			throw new Exception("The instruction '" + data + "' has more than 1 operand.");
-		}
+		String[] splittedData = data.split("[\t ]+");
 
-		analyzeInstructionType(data.split("[\t ]+")[0]);
-		
+		analyzeInstructionType(splittedData[0]);
+
 		if (instructionType == null) {
 			throw new Exception("The instruction '" + data + "' doesn't exist.");
+		} 
+		else if ((instructionType == InstructionType.halt) && (splittedData.length > 1)
+				&& !splittedData[1].startsWith("#")) {
+			throw new Exception("The instruction '" + data + "' has more than 1 operand.");
 		}
-
-		if (instructionType != InstructionType.halt) {
-			operating = new Operating(data.split("[\t ]+")[1]);
+		else if (instructionType != InstructionType.halt) {
+			if ((splittedData.length > 2) && !splittedData[2].startsWith("#")) {
+				throw new Exception("The instruction '" + data + "' has more than 1 operand.");
+			}
+			else if (splittedData.length > 1) {
+				try {
+					operating = new Operating(splittedData[1]);
+				}
+				catch (NumberFormatException e) {				
+					throw new Exception("The instruction '" + data + "' has an invalid operand.");
+				}
+			}
+			else {
+				throw new Exception("The instruction '" + data + "' doesn't have an operand.");
+			}
 		}
 	}
 

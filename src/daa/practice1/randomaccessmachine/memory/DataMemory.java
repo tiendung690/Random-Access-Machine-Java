@@ -23,7 +23,10 @@ public class DataMemory extends InfiniteMemory<DataRegister> {
 	 * @see daa.practice1.randomaccessmachine.memory.InfiniteMemory#setRegisterAt(int, java.lang.Object)
 	 */
 	@Override
-	public void setRegisterAt(int index, DataRegister data) {
+	public void setRegisterAt(int index, DataRegister data) throws Exception {
+		if (index < 0) {
+			throw new Exception("Can't access a negative register.");
+		}
 		memory.put(getPosition(index), data);
 	}
 
@@ -31,14 +34,18 @@ public class DataMemory extends InfiniteMemory<DataRegister> {
 	 * @see daa.practice1.randomaccessmachine.memory.InfiniteMemory#getRegisterAt(int)
 	 */
 	@Override
-	public DataRegister getRegisterAt(int index) {
+	public DataRegister getRegisterAt(int index) throws Exception {
+		if (index < 0) {
+			throw new Exception("Can't access a negative register.");
+		}
+		
 		if (!memory.containsKey(index)) {
 			setRegisterAt(index, new DataRegister());
 		}
 		return memory.get(getPosition(index));
 	}
 	
-	public DataRegister getACC() {
+	public DataRegister getACC() throws Exception {
 		return getRegisterAt(0);
 	}
 	

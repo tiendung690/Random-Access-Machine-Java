@@ -2,11 +2,11 @@
 # que encuentre un 0 y copia los valores leídos a la cinta
 # de salida (el valor 0 no se copia)
 
-lee:	read 1
-			load 1
-      mul =2
+l1ee: read 1 #jeje
+			load 1.6
 			jzero fin
+			div =-2
       store 1
 			write 1
-			jump lee
+			jump l1ee
 fin:	halt

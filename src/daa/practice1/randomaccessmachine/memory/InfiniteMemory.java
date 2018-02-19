@@ -44,12 +44,12 @@ public abstract class InfiniteMemory<T> {
 	 * @param index Index of the register.
 	 * @return Data at the memory index passed by argument.
 	 */
-	protected abstract T getRegisterAt(int index);
+	protected abstract T getRegisterAt(int index) throws Exception;
 	/**
 	 * Abstract Method that subclasses must implement to specify how a data in the register
 	 * can be accessed and changed.
 	 * @param index Index of the register.
 	 * @param data Data that has to be at the memory index passed by argument.
 	 */
-	protected abstract void setRegisterAt(int index, T data);
+	protected abstract void setRegisterAt(int index, T data) throws Exception;
 }

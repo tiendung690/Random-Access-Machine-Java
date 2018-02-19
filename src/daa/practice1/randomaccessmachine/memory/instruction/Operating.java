@@ -22,28 +22,27 @@ public class Operating {
 	
 	/**
 	 * This method analyzes a raw operator and classify it's type using the
-	 * OperatorType Enum.
+	 * OperatorType Enum. For being a TAG it must contain at least 1 non-digit.
 	 * @param operatorName Raw operator.
 	 */
-	public void analyzeOperatorType(String operatingName) {
-		if (operatingName.matches("[0-9]*[a-zA-Z]+[0-9]*")) { // For being a TAG it must contain at least 1 char.
+	public void analyzeOperatorType(String operatingName) throws NumberFormatException {
+		if (operatingName.matches("[0-9]*[a-zA-Z | !\"$%&.,?@~]{1}"
+				+ "[\\w | !\"$%&.,?@~]*")) {			
 			this.operatingName = "TAG";
 			this.tagName = operatingName;
 		}
-		else {
-			int registerNumber = Integer.parseInt(operatingName.replaceAll("[\\D]", ""));	
-			
+		else {			
 			if (operatingName.startsWith("=")) {
 				this.operatingName = "CONSTANT_ADDRESSING";
-				this.registerNumber = registerNumber;
+				this.registerNumber = Integer.parseInt(operatingName.replaceFirst("\\=", ""));
 			}
 			else if (operatingName.startsWith("*")) {
 				this.operatingName = "INDIRECT_ADDRESSING";
-				this.registerNumber = registerNumber;				
+				this.registerNumber = Integer.parseInt(operatingName.replaceFirst("\\*", ""));
 			}
 			else {
 				this.operatingName = "DIRECT_ADDRESSING";
-				this.registerNumber = registerNumber;
+				this.registerNumber = Integer.parseInt(operatingName);
 			}
 		}
 	}
