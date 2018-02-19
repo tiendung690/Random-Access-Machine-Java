@@ -33,7 +33,7 @@ public class ProgramRegister extends Register<String> {
 	 */
 	public ProgramRegister(String data) throws Exception {
 		super(data);
-		String[] splittedData = data.split("[\t ]+");
+		String[] splittedData = data.split("[\\s]+");
 
 		analyzeInstructionType(splittedData[0]);
 
