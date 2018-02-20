@@ -3,6 +3,7 @@ package daa.practice1.randomaccessmachine.io;
 
 /** Import the IOPackage necessary for FileWriter and BufferedWriter. */
 import java.io.*;
+import java.util.ArrayList;
 
 /**
  * Class that does all the necessary operations with the outputTape. This
@@ -41,6 +42,12 @@ public class OutputTape {
 	public void write(int numberToWrite) throws IOException {
 		outputTape.write(String.valueOf(numberToWrite));
 		outputTape.newLine();
+	}
+	
+	public void writeArray(ArrayList<Integer> outputArray) throws IOException {
+		for (Integer numberToWrite : outputArray) {
+			this.write(numberToWrite);
+		}
 	}
 
 	/**

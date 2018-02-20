@@ -3,6 +3,7 @@ package daa.practice1.randomaccessmachine;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.TreeMap;
 
 import daa.practice1.randomaccessmachine.alu.ArithmeticLogicUnit;
@@ -35,6 +36,11 @@ public class RandomAccessMachine {
 	private OutputTape outputTape;
 	/** Counter of the executed instructions. */
 	private int instructionCounter;
+	
+	private boolean debug;
+	private ArrayList<Integer> inputArray;
+	private int inputIndex;
+	private ArrayList<Integer> outputArray;
 
 	/**
 	 * Constructor that initialize the private variables previously explained.
@@ -66,6 +72,12 @@ public class RandomAccessMachine {
 	 * @throws IOException
 	 */
 	public void start(boolean debug) throws IOException {
+		this.debug = debug;
+		if (debug) { 
+			inputArray = inputTape.readInputTape();
+			outputArray = new ArrayList<Integer>();
+		}
+		
 		try {
 			while (ipIndex != null) {
 				if (debug) { 
@@ -83,7 +95,11 @@ public class RandomAccessMachine {
 				System.out.println("ERROR in line " + ipIndex + ": " + e.getMessage());
 			}
 		}
-
+		
+		if (debug) {
+			outputTape.writeArray(outputArray);
+		}
+		
 		inputTape.close();
 		outputTape.close();
 	}
@@ -128,6 +144,14 @@ public class RandomAccessMachine {
 		showProgramRegisters();
 		System.out.println(" ");
 		
+		System.out.println("*INPUT TAPE*");
+		showInputTape();
+		System.out.println(" ");
+		
+		System.out.println("*OUTPUT TAPE*");
+		showOutputTape();
+		System.out.println(" ");
+		
 		System.out.println("*Number of instructions executed: " + instructionCounter);
 		System.out.println("*IP Index: " + ipIndex);
 		System.out.println("*Current Instruction: " + programMemory.getRegisterAt(ipIndex).get());
@@ -162,6 +186,37 @@ public class RandomAccessMachine {
 			System.out.println("P[" + index + "]= " + programMemory.getRegisterAt(index++).get());
 		}
 	}
+	
+	/**
+	 * Visual Representation of the Input Tape.
+	 * 
+	 * @throws Exception
+	 */
+	private void showInputTape() throws Exception {
+		for (Integer inputValue : inputArray) {
+			if (inputArray.indexOf(inputValue) == inputIndex) {
+				System.out.print("[*" + inputValue + "] ");	
+			}
+			else {
+				System.out.print("[" + inputValue + "] ");				
+			}
+		}
+		System.out.println(" ");
+	}
+	
+	
+	/**
+	 * Visual Representation of the Output Tape.
+	 * 
+	 * @throws Exception
+	 */
+	private void showOutputTape() throws Exception {
+		for (Integer outputValue : outputArray) {
+			System.out.print("[" + outputValue + "] ");
+		}
+		System.out.println(" ");
+	}
+	
 
 	/**
 	 * Method to resolve the Indirect addressing of the iRegister passed by
@@ -393,7 +448,12 @@ public class RandomAccessMachine {
 					throw new Exception("The read value can't be assigned to the ACC.");
 				}
 				else {
-					ArithmeticLogicUnit.assign(dataMemory.getRegisterAt(iValue), inputTape.read());
+					if (debug) {
+						ArithmeticLogicUnit.assign(dataMemory.getRegisterAt(iValue), inputArray.get(inputIndex++));
+					}
+					else {
+						ArithmeticLogicUnit.assign(dataMemory.getRegisterAt(iValue), inputTape.read());
+					}						
 				}
 				break;
 
@@ -404,7 +464,12 @@ public class RandomAccessMachine {
 					throw new Exception("The read value can't be assigned to the ACC.");
 				}
 				else {
-					ArithmeticLogicUnit.assign(dataMemory.getRegisterAt(jValue), inputTape.read());
+					if (debug) {
+						ArithmeticLogicUnit.assign(dataMemory.getRegisterAt(jValue), inputArray.get(inputIndex++));
+					}
+					else {
+						ArithmeticLogicUnit.assign(dataMemory.getRegisterAt(jValue), inputTape.read());
+					}					
 				}
 				break;
 
@@ -429,7 +494,12 @@ public class RandomAccessMachine {
 	private void write(Operating operating) throws Exception {
 		switch (operating.getOperatingName()) {
 			case "CONSTANT_ADDRESSING":
-				outputTape.write(operating.getRegisterNumber());
+				if (debug) {
+					outputArray.add(operating.getRegisterNumber());
+				}
+				else {
+					outputTape.write(operating.getRegisterNumber());					
+				}
 				break;
 
 			case "DIRECT_ADDRESSING":
@@ -439,7 +509,12 @@ public class RandomAccessMachine {
 					throw new Exception("The ACC value can't be assigned to the outputTape.");
 				}
 				else {
-					outputTape.write(dataMemory.getRegisterAt(iValue).get());
+					if (debug) {
+						outputArray.add(dataMemory.getRegisterAt(iValue).get());
+					}
+					else {
+						outputTape.write(dataMemory.getRegisterAt(iValue).get());					
+					}					
 				}
 				break;
 
@@ -449,8 +524,13 @@ public class RandomAccessMachine {
 				if (jValue == 0) {
 					throw new Exception("The ACC value can't be assigned to the outputTape.");
 				}
-				else {
-					outputTape.write(dataMemory.getRegisterAt(jValue).get());
+				else {					
+					if (debug) {
+						outputArray.add(dataMemory.getRegisterAt(jValue).get());
+					}
+					else {
+						outputTape.write(dataMemory.getRegisterAt(jValue).get());					
+					}	
 				}
 
 				break;

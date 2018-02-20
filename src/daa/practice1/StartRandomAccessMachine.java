@@ -41,7 +41,7 @@ public class StartRandomAccessMachine {
 			showHelp();
 		}
 		else {
-			boolean debug = ((args.length != 3) && (args[3].equals("debug"))) ? true : false;
+			boolean debug = ((args.length != 3) && (args[3].equals("1"))) ? true : false;
 
 			try {
 				RandomAccessMachine ram = new RandomAccessMachine(args[0], args[1], args[2]);

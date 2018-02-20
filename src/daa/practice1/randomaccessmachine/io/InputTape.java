@@ -3,6 +3,7 @@ package daa.practice1.randomaccessmachine.io;
 
 /** Import the IOPackage necessary for FileReader and BufferedReader. */
 import java.io.*;
+import java.util.ArrayList;
 
 /**
  * Class that does all the necessary operations with the inputTape. This
@@ -55,6 +56,16 @@ public class InputTape {
 		}
 
 		return returnValue;
+	}
+	
+	public ArrayList<Integer> readInputTape() throws IOException {
+		ArrayList<Integer> inputArray = new ArrayList<Integer>();
+		
+		while (inputTape.ready()) {
+			inputArray.add(read());
+		}
+		
+		return inputArray;
 	}
 
 	/**
