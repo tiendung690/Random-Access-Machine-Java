@@ -1,0 +1,43 @@
+
+# Programa para calcular x elevado a y, ambos enteros.
+# El resultado del cálculo se almacenará en la cinta de salida.
+# Si y < 0, se escribirá en la cinta de salida -1, pues no puede
+# llevarse a cabo.
+
+# Leemos los números x=1 e y=2
+read 1
+read 2
+
+# Comprobamos si y = 0
+load 2
+jzero yzero
+
+# Comprobamos si y < 0
+mul =-1
+jgtz yneg
+
+# Antes del bucle le resto 1 al y, pues sólo podemos parar cuando sea 0
+# y si no elevaría 1 vez mas de la cuenta.
+load 2
+sub =1
+store 2
+
+# Mientras y != 0, x *= x
+while: load 1
+       mul 0
+       store 1
+
+       load 2
+       sub =1
+       store 2
+
+       jgtz while
+       write 1
+       jump fin
+
+yneg:  write =-1
+       jump fin
+
+yzero: write =1
+
+fin:   halt

@@ -37,9 +37,15 @@ public class RandomAccessMachine {
 	/** Counter of the executed instructions. */
 	private int instructionCounter;
 	
+	/** Private variable to indicate if the program has to show the process. */
 	private boolean debug;
+	
+	/** ArrayList of Integer that represent the input tape. */
 	private ArrayList<Integer> inputArray;
+	/** Index of inputArray. */
 	private int inputIndex;
+	
+	/** ArrayList of Integer that represent the output tape. */
 	private ArrayList<Integer> outputArray;
 
 	/**
@@ -84,8 +90,8 @@ public class RandomAccessMachine {
 	public void start(boolean debug) throws IOException {
 		this.debug = debug;
 		if (debug) { 
-			inputArray = inputTape.readInputTape();
-			outputArray = new ArrayList<Integer>();
+			this.inputArray = inputTape.readInputTape();
+			this.outputArray = new ArrayList<Integer>();
 		}
 		
 		try {
@@ -98,6 +104,7 @@ public class RandomAccessMachine {
 			}
 		}
 		catch (Exception e) {
+			e.printStackTrace();
 			if (e.getMessage() == null) {
 				System.out.println("ERROR in line " + ipIndex + ": " + e.getCause());
 			}
@@ -142,6 +149,10 @@ public class RandomAccessMachine {
 		method.invoke(this, currentInstruction.getOperating());
 	}
 	
+	/**
+	 * Show the Random Access Machine in a visual way.
+	 * @throws Exception
+	 */
 	private void showExecution() throws Exception {
 		System.out.println("---------------------");
 		System.out.println("RANDOM ACCESS MACHINE");
@@ -152,7 +163,7 @@ public class RandomAccessMachine {
 		System.out.println(" ");
 		
 		System.out.println("*PROGRAM REGISTERS*");
-		//showProgramRegisters();
+		showProgramRegisters();
 		System.out.println(" ");
 		
 		System.out.println("*INPUT TAPE*");
@@ -190,11 +201,11 @@ public class RandomAccessMachine {
 	 * @throws Exception
 	 */
 	private void showProgramRegisters() throws Exception {
-		int index = programMemory.getFirstRegister();
-		int lastIndex = programMemory.getLastRegister();
+		Integer index = programMemory.getFirstRegister();
 		
-		while (index <= lastIndex) {
-			System.out.println("P[" + index + "]= " + programMemory.getRegisterAt(index++).get());
+		while (index != null) {
+			System.out.println("P[" + index + "]= " + programMemory.getRegisterAt(index).get());
+			index = programMemory.getNextRegister(index);
 		}
 	}
 	

@@ -61,8 +61,12 @@ public class ProgramMemory extends InfiniteMemory<ProgramRegister> {
 			}
 			i++;
 		}
-
+		
 		reader.close();
+		
+		if (this.memory.size() == 0) {			
+			throw new Exception("Program File empty.");
+		}
 	}
 
 	/**
