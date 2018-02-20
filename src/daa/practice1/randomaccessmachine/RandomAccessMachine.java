@@ -43,12 +43,12 @@ public class RandomAccessMachine {
 	private boolean debug;
 	
 	/** ArrayList of Integer that represent the input tape. */
-	private ArrayList<Integer> inputArray;
+	private ArrayList<Double> inputArray;
 	/** Index of inputArray. */
 	private int inputIndex;
 	
 	/** ArrayList of Integer that represent the output tape. */
-	private ArrayList<Integer> outputArray;
+	private ArrayList<Double> outputArray;
 
 	/**
 	 * Constructor that initialize the private variables previously explained.
@@ -96,7 +96,7 @@ public class RandomAccessMachine {
 		this.debug = debug;
 		if (debug) { 
 			this.inputArray = inputTape.readInputTape();
-			this.outputArray = new ArrayList<Integer>();
+			this.outputArray = new ArrayList<Double>();
 		}
 		
 		try {
@@ -245,7 +245,7 @@ public class RandomAccessMachine {
 	 */
 	private void showInputTape() throws Exception {
 		for (int i = 0; i < inputArray.size(); ++i) {
-			int inputValue = inputArray.get(i);
+			double inputValue = inputArray.get(i);
 			
 			if (i == inputIndex) {
 				System.out.print("[*" + inputValue + "] ");	
@@ -264,7 +264,7 @@ public class RandomAccessMachine {
 	 * @throws Exception
 	 */
 	private void showOutputTape() throws Exception {
-		for (Integer outputValue : outputArray) {
+		for (Double outputValue : outputArray) {
 			System.out.print("[" + outputValue + "] ");
 		}
 		System.out.println(" ");
@@ -502,10 +502,10 @@ public class RandomAccessMachine {
 				}
 				else {
 					if (debug) {
-						ArithmeticLogicUnit.assign(dataMemory.getRegisterAt(iValue), inputArray.get(inputIndex++));
+						ArithmeticLogicUnit.assign(dataMemory.getRegisterAt(iValue), inputArray.get(inputIndex++).intValue());
 					}
 					else {
-						ArithmeticLogicUnit.assign(dataMemory.getRegisterAt(iValue), inputTape.read());
+						ArithmeticLogicUnit.assign(dataMemory.getRegisterAt(iValue), inputTape.read().intValue());
 					}						
 				}
 				break;
@@ -518,10 +518,10 @@ public class RandomAccessMachine {
 				}
 				else {
 					if (debug) {
-						ArithmeticLogicUnit.assign(dataMemory.getRegisterAt(jValue), inputArray.get(inputIndex++));
+						ArithmeticLogicUnit.assign(dataMemory.getRegisterAt(jValue), inputArray.get(inputIndex++).intValue());
 					}
 					else {
-						ArithmeticLogicUnit.assign(dataMemory.getRegisterAt(jValue), inputTape.read());
+						ArithmeticLogicUnit.assign(dataMemory.getRegisterAt(jValue), inputTape.read().intValue());
 					}					
 				}
 				break;
@@ -548,7 +548,7 @@ public class RandomAccessMachine {
 		switch (operating.getOperatingName()) {
 			case "CONSTANT_ADDRESSING":
 				if (debug) {
-					outputArray.add(operating.getRegisterNumber());
+					outputArray.add((double) operating.getRegisterNumber());
 				}
 				else {
 					outputTape.write(operating.getRegisterNumber());					
@@ -563,7 +563,7 @@ public class RandomAccessMachine {
 				}
 				else {
 					if (debug) {
-						outputArray.add(dataMemory.getRegisterAt(iValue).get());
+						outputArray.add((double) dataMemory.getRegisterAt(iValue).get());
 					}
 					else {
 						outputTape.write(dataMemory.getRegisterAt(iValue).get());					
@@ -579,7 +579,7 @@ public class RandomAccessMachine {
 				}
 				else {					
 					if (debug) {
-						outputArray.add(dataMemory.getRegisterAt(jValue).get());
+						outputArray.add(dataMemory.getRegisterAt(jValue).get().doubleValue());
 					}
 					else {
 						outputTape.write(dataMemory.getRegisterAt(jValue).get());					

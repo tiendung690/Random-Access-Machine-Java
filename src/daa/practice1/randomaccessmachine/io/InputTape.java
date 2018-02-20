@@ -40,13 +40,13 @@ public class InputTape {
 	 *           Throws an error if the line is not an integer or there was an error
 	 *           reading it.
 	 */
-	public Integer read() throws IOException {
+	public Double read() throws IOException {
 		String lineRead;
-		int returnValue;
+		double returnValue;
 
 		try {
 			lineRead = inputTape.readLine();
-			returnValue = Integer.parseInt(lineRead);
+			returnValue = Double.parseDouble(lineRead);
 		}
 		catch (IOException ioException) {
 			throw new IOException("There was a problem reading the number.");
@@ -58,8 +58,8 @@ public class InputTape {
 		return returnValue;
 	}
 	
-	public ArrayList<Integer> readInputTape() throws IOException {
-		ArrayList<Integer> inputArray = new ArrayList<Integer>();
+	public ArrayList<Double> readInputTape() throws IOException {
+		ArrayList<Double> inputArray = new ArrayList<Double>();
 		
 		while (inputTape.ready()) {
 			inputArray.add(read());
