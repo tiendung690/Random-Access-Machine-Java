@@ -1,30 +1,28 @@
-/** File DataMemory. */
+/**
+ * 
+ */
 package daa.practice1.randomaccessmachine.memory;
 
 import java.util.TreeMap;
 
-import daa.practice1.randomaccessmachine.memory.register.DataRegister;
+import daa.practice1.randomaccessmachine.memory.register.FloatRegister;
 
 /**
- * Class that contains an array of the Data Register that the Random Access
- * Machine will use.
- * 
- * @author Ángel Igareta
- * @version 1.0
- * @since 12-2-2018
+ * @author alu0100967111
+ *
  */
-public class DataMemory extends InfiniteMemory<DataRegister> {
-
+public class FloatMemory extends InfiniteMemory<FloatRegister> {
+	
 	/** Log of used Registers */
-	private TreeMap<Integer, DataRegister> usedRegisters;
+	private TreeMap<Integer, FloatRegister> usedRegisters;
 	
 	/**
 	 * Constructor that only calls it's superclass constructor to initialize the
 	 * memory.
 	 */
-	public DataMemory() {
+	public FloatMemory() {
 		super();
-		usedRegisters = new TreeMap<Integer, DataRegister>();
+		usedRegisters = new TreeMap<Integer, FloatRegister>();
 	}
 
 	/*
@@ -38,7 +36,7 @@ public class DataMemory extends InfiniteMemory<DataRegister> {
 	 * negative.
 	 */
 	@Override
-	public void setRegisterAt(int index, DataRegister data) throws Exception {
+	public void setRegisterAt(int index, FloatRegister data) throws Exception {
 		if (index < 0) {
 			throw new Exception("Can't access a negative register.");
 		}
@@ -53,7 +51,7 @@ public class DataMemory extends InfiniteMemory<DataRegister> {
 	/**
 	 * @return the usedRegisters
 	 */
-	public TreeMap<Integer, DataRegister> getUsedRegisters() {
+	public TreeMap<Integer, FloatRegister> getUsedRegisters() {
 		return usedRegisters;
 	}
 
@@ -67,13 +65,13 @@ public class DataMemory extends InfiniteMemory<DataRegister> {
 	 * negative.
 	 */
 	@Override
-	public DataRegister getRegisterAt(int index) throws Exception {
+	public FloatRegister getRegisterAt(int index) throws Exception {
 		if (index < 0) {
 			throw new Exception("Can't access a negative register.");
 		}
 
 		if (!memory.containsKey(index)) {
-			setRegisterAt(index, new DataRegister());
+			setRegisterAt(index, new FloatRegister());
 		}		
 		
 		return memory.get(getMemoryPosition(index));
@@ -86,8 +84,7 @@ public class DataMemory extends InfiniteMemory<DataRegister> {
 	 * @throws Exception
 	 *           Throws an exception if the index that is being accesed is negative.
 	 */
-	public DataRegister getACC() throws Exception {
+	public FloatRegister getACC() throws Exception {
 		return getRegisterAt(0);
 	}
-
 }

@@ -30,6 +30,8 @@ public class RandomAccessMachine {
 	private ProgramMemory programMemory;
 	/** DataMemory object that represents a set of Data Register. */
 	private DataMemory dataMemory;
+	/** FloatMemory object that represents a set of Float Register. */
+	private FloatMemory floatMemory;
 	/** InputTape that represents the buffer where the Machine will read from. */
 	private InputTape inputTape;
 	/** OutputTape that represents the buffer where the Machine will write to. */
@@ -61,6 +63,7 @@ public class RandomAccessMachine {
 			throws Exception {
 
 		this.dataMemory = new DataMemory();
+		this.floatMemory = new FloatMemory();
 		this.programMemory = new ProgramMemory(programFilename);
 		this.ipIndex = programMemory.getFirstRegister();
 		
@@ -169,6 +172,10 @@ public class RandomAccessMachine {
 		showDataRegisters();
 		System.out.println(" ");
 		
+		System.out.println("*FLOAT REGISTERS*");
+		showFloatRegisters();
+		System.out.println(" ");
+		
 		System.out.println("*PROGRAM REGISTERS*");
 		showProgramRegisters();
 		System.out.println(" ");
@@ -197,6 +204,21 @@ public class RandomAccessMachine {
 		
 		for (Integer index : usedRegisters.keySet()) {
 			System.out.println("R[" + index + "]= " + dataMemory.getRegisterAt(index));
+		}
+		
+		System.out.println("...");
+	}
+	
+	/**
+	 * Visual Representation of the Data Registers.
+	 * 
+	 * @throws Exception
+	 */
+	private void showFloatRegisters() throws Exception {
+		TreeMap<Integer, FloatRegister> usedRegisters = floatMemory.getUsedRegisters();
+		
+		for (Integer index : usedRegisters.keySet()) {
+			System.out.println("F[" + index + "]= " + floatMemory.getRegisterAt(index));
 		}
 		
 		System.out.println("...");

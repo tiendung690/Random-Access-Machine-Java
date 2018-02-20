@@ -1,19 +1,17 @@
-/** File DataRegister. */
+/**
+ * 
+ */
 package daa.practice1.randomaccessmachine.memory.register;
 
 /**
- * Data Register is a subclass of Register with the Integer data type. Besides
- * it implements a method to change the data of the register.
- * 
- * @author Ángel Igareta
- * @version 1.0
- * @since 12-2-2018
+ * @author alu0100967111
+ *
  */
-public class DataRegister extends Register<Integer> {
-
+public class FloatRegister extends Register<Double> {
+	
 	/** Default constructor that initializes the register data with 0. */
-	public DataRegister() {
-		super(0);
+	public FloatRegister() {
+		super(0.0);
 	}
 
 	/**
@@ -23,8 +21,8 @@ public class DataRegister extends Register<Integer> {
 	 * @param data
 	 *          Integer Value of the Data Register.
 	 */
-	public DataRegister(Integer data) {
-		super(data);
+	public FloatRegister(Double data) {
+		super(new Double(data));
 	}
 
 	/**
@@ -33,8 +31,8 @@ public class DataRegister extends Register<Integer> {
 	 * @param data
 	 *          Value to be set in the register.
 	 */
-	public void set(Integer data) {
-		this.data = data;
+	public void set(Double data) {
+		this.data = new Double(data);
 	}
 
 	/*
