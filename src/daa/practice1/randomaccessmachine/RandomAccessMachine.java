@@ -56,10 +56,20 @@ public class RandomAccessMachine {
 
 		this.dataMemory = new DataMemory();
 		this.programMemory = new ProgramMemory(programFilename);
-		this.inputTape = new InputTape(inputTapeFilename);
-		this.outputTape = new OutputTape(outputTapeFilename);
-
 		this.ipIndex = programMemory.getFirstRegister();
+		
+		try {
+			this.inputTape = new InputTape(inputTapeFilename);
+			this.outputTape = new OutputTape(outputTapeFilename);			
+		}
+		catch (IOException e) {
+			System.out.println("*CLOSING TAPES*");
+			
+			inputTape.close();
+			outputTape.close();
+			
+			throw new IOException("Error reading the tapes.");
+		}
 	}
 
 	/**
@@ -100,6 +110,7 @@ public class RandomAccessMachine {
 			outputTape.writeArray(outputArray);
 		}
 		
+		System.out.println("*CLOSING TAPES*");
 		inputTape.close();
 		outputTape.close();
 	}
@@ -141,7 +152,7 @@ public class RandomAccessMachine {
 		System.out.println(" ");
 		
 		System.out.println("*PROGRAM REGISTERS*");
-		showProgramRegisters();
+		//showProgramRegisters();
 		System.out.println(" ");
 		
 		System.out.println("*INPUT TAPE*");
@@ -193,8 +204,10 @@ public class RandomAccessMachine {
 	 * @throws Exception
 	 */
 	private void showInputTape() throws Exception {
-		for (Integer inputValue : inputArray) {
-			if (inputArray.indexOf(inputValue) == inputIndex) {
+		for (int i = 0; i < inputArray.size(); ++i) {
+			int inputValue = inputArray.get(i);
+			
+			if (i == inputIndex) {
 				System.out.print("[*" + inputValue + "] ");	
 			}
 			else {
