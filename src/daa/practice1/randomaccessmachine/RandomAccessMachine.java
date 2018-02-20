@@ -69,7 +69,9 @@ public class RandomAccessMachine {
 			this.outputTape = new OutputTape(outputTapeFilename);			
 		}
 		catch (IOException e) {
-			System.out.println("*CLOSING TAPES*");
+			if (debug) {
+				System.out.println("*CLOSING TAPES*");				
+			}
 			
 			inputTape.close();
 			outputTape.close();
@@ -96,11 +98,11 @@ public class RandomAccessMachine {
 		
 		try {
 			while (ipIndex != null) {
+				instructionCounter++;
 				if (debug) { 
 					showExecution();
 				}
-				executeInstruction(debug);
-				instructionCounter++;
+				executeInstruction();
 			}
 		}
 		catch (Exception e) {
@@ -117,7 +119,13 @@ public class RandomAccessMachine {
 			outputTape.writeArray(outputArray);
 		}
 		
-		System.out.println("*CLOSING TAPES*");
+		if (debug) {
+			System.out.println("*CLOSING TAPES*");				
+		}
+		else {
+			System.out.println("*Number of instructions executed: " + instructionCounter);
+		}
+		
 		inputTape.close();
 		outputTape.close();
 	}
@@ -137,11 +145,10 @@ public class RandomAccessMachine {
 	 * pointing. For finding which method to call it analyze the instruction and
 	 * call the method with the same name as the instructionType.
 	 * 
-	 * @param debug
 	 * @throws Exception
 	 *           If there is a runtime exception.
 	 */
-	private void executeInstruction(boolean debug) throws Exception {
+	private void executeInstruction() throws Exception {
 		ProgramRegister currentInstruction = programMemory.getRegisterAt(ipIndex);
 		InstructionType instructionType = currentInstruction.getInstructionType();
 
