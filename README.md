@@ -2,6 +2,9 @@
 Implementation of a Random Access Machine in Java programming language.
 [Link to Documentation](https://ull-esit-inf-daa-1718.github.io/ull-esit-inf-daa-1718-pract1-angeligareta/)
 
+## Status
+Reached point 4 of Modification. Calculated logarithm from 0 to 1. Not finished for rest.
+
 ## Index
 * [Description](#description)
 * [UML Diagram](#uml-diagram)
