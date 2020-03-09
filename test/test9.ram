@@ -1,0 +1,53 @@
+# Leemos los números x=1 e y=2
+readf 1
+
+# Comprobamos si y = 0
+loadf 2
+jzerof yzero
+
+# Comprobamos si y < 0
+mulf =-1
+jgtzf yzero
+
+# Comprobamos si y = 1
+loadf 2
+subf 1
+jzerof yneg
+
+# Antes del bucle le resto 1 al y, pues sólo podemos parar cuando sea 0
+# y si no elevaría 1 vez mas de la cuenta.
+loadf 2
+subf =1
+storef 2
+
+# F[1] = 2
+loadf 2
+storef 1
+
+# F[3] = 1
+loadf 1
+storef 3
+
+# Mientras F[3] - y < 0 => 2 = 2^F[3]
+loadf 3
+subf 2
+
+# Inacabado
+pow: loadf 2
+     mulf 3
+     storef 1
+
+     loadf 2
+     subf =1
+     storef 2
+
+     jgtzf while
+     writef 1
+     jump fin
+
+yneg:  writef =-1
+       jump fin
+
+yzero: writef =0
+
+fin:   halt

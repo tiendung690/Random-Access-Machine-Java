@@ -20,5 +20,16 @@ public enum InstructionType {
 	jump,
 	jzero,
 	jgtz,
-	halt;
+	halt,
+	
+	loadf,
+	storef,
+	addf,
+	subf,
+	mulf,
+	divf,
+	readf,
+	writef,
+	jzerof,
+	jgtzf;
 }

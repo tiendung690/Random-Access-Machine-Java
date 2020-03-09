@@ -30,6 +30,8 @@ public class RandomAccessMachine {
 	private ProgramMemory programMemory;
 	/** DataMemory object that represents a set of Data Register. */
 	private DataMemory dataMemory;
+	/** FloatMemory object that represents a set of Float Register. */
+	private FloatMemory floatMemory;
 	/** InputTape that represents the buffer where the Machine will read from. */
 	private InputTape inputTape;
 	/** OutputTape that represents the buffer where the Machine will write to. */
@@ -41,12 +43,12 @@ public class RandomAccessMachine {
 	private boolean debug;
 	
 	/** ArrayList of Integer that represent the input tape. */
-	private ArrayList<Integer> inputArray;
+	private ArrayList<Double> inputArray;
 	/** Index of inputArray. */
 	private int inputIndex;
 	
 	/** ArrayList of Integer that represent the output tape. */
-	private ArrayList<Integer> outputArray;
+	private ArrayList<Double> outputArray;
 
 	/**
 	 * Constructor that initialize the private variables previously explained.
@@ -61,6 +63,7 @@ public class RandomAccessMachine {
 			throws Exception {
 
 		this.dataMemory = new DataMemory();
+		this.floatMemory = new FloatMemory();
 		this.programMemory = new ProgramMemory(programFilename);
 		this.ipIndex = programMemory.getFirstRegister();
 		
@@ -93,7 +96,7 @@ public class RandomAccessMachine {
 		this.debug = debug;
 		if (debug) { 
 			this.inputArray = inputTape.readInputTape();
-			this.outputArray = new ArrayList<Integer>();
+			this.outputArray = new ArrayList<Double>();
 		}
 		
 		try {
@@ -169,6 +172,10 @@ public class RandomAccessMachine {
 		showDataRegisters();
 		System.out.println(" ");
 		
+		System.out.println("*FLOAT REGISTERS*");
+		showFloatRegisters();
+		System.out.println(" ");
+		
 		System.out.println("*PROGRAM REGISTERS*");
 		showProgramRegisters();
 		System.out.println(" ");
@@ -203,6 +210,21 @@ public class RandomAccessMachine {
 	}
 	
 	/**
+	 * Visual Representation of the Data Registers.
+	 * 
+	 * @throws Exception
+	 */
+	private void showFloatRegisters() throws Exception {
+		TreeMap<Integer, FloatRegister> usedRegisters = floatMemory.getUsedRegisters();
+		
+		for (Integer index : usedRegisters.keySet()) {
+			System.out.println("F[" + index + "]= " + floatMemory.getRegisterAt(index));
+		}
+		
+		System.out.println("...");
+	}
+	
+	/**
 	 * Visual Representation of the Program Registers.
 	 * 
 	 * @throws Exception
@@ -223,7 +245,7 @@ public class RandomAccessMachine {
 	 */
 	private void showInputTape() throws Exception {
 		for (int i = 0; i < inputArray.size(); ++i) {
-			int inputValue = inputArray.get(i);
+			double inputValue = inputArray.get(i);
 			
 			if (i == inputIndex) {
 				System.out.print("[*" + inputValue + "] ");	
@@ -242,7 +264,7 @@ public class RandomAccessMachine {
 	 * @throws Exception
 	 */
 	private void showOutputTape() throws Exception {
-		for (Integer outputValue : outputArray) {
+		for (Double outputValue : outputArray) {
 			System.out.print("[" + outputValue + "] ");
 		}
 		System.out.println(" ");
@@ -480,10 +502,10 @@ public class RandomAccessMachine {
 				}
 				else {
 					if (debug) {
-						ArithmeticLogicUnit.assign(dataMemory.getRegisterAt(iValue), inputArray.get(inputIndex++));
+						ArithmeticLogicUnit.assign(dataMemory.getRegisterAt(iValue), inputArray.get(inputIndex++).intValue());
 					}
 					else {
-						ArithmeticLogicUnit.assign(dataMemory.getRegisterAt(iValue), inputTape.read());
+						ArithmeticLogicUnit.assign(dataMemory.getRegisterAt(iValue), inputTape.read().intValue());
 					}						
 				}
 				break;
@@ -496,10 +518,10 @@ public class RandomAccessMachine {
 				}
 				else {
 					if (debug) {
-						ArithmeticLogicUnit.assign(dataMemory.getRegisterAt(jValue), inputArray.get(inputIndex++));
+						ArithmeticLogicUnit.assign(dataMemory.getRegisterAt(jValue), inputArray.get(inputIndex++).intValue());
 					}
 					else {
-						ArithmeticLogicUnit.assign(dataMemory.getRegisterAt(jValue), inputTape.read());
+						ArithmeticLogicUnit.assign(dataMemory.getRegisterAt(jValue), inputTape.read().intValue());
 					}					
 				}
 				break;
@@ -526,7 +548,7 @@ public class RandomAccessMachine {
 		switch (operating.getOperatingName()) {
 			case "CONSTANT_ADDRESSING":
 				if (debug) {
-					outputArray.add(operating.getRegisterNumber());
+					outputArray.add((double) operating.getRegisterNumber());
 				}
 				else {
 					outputTape.write(operating.getRegisterNumber());					
@@ -541,7 +563,7 @@ public class RandomAccessMachine {
 				}
 				else {
 					if (debug) {
-						outputArray.add(dataMemory.getRegisterAt(iValue).get());
+						outputArray.add((double) dataMemory.getRegisterAt(iValue).get());
 					}
 					else {
 						outputTape.write(dataMemory.getRegisterAt(iValue).get());					
@@ -557,7 +579,7 @@ public class RandomAccessMachine {
 				}
 				else {					
 					if (debug) {
-						outputArray.add(dataMemory.getRegisterAt(jValue).get());
+						outputArray.add(dataMemory.getRegisterAt(jValue).get().doubleValue());
 					}
 					else {
 						outputTape.write(dataMemory.getRegisterAt(jValue).get());					
@@ -653,6 +675,379 @@ public class RandomAccessMachine {
 			case "TAG":
 				String tagForJump = operating.getTag();
 				if (dataMemory.getACC().get() > 0) {
+					moveIP(programMemory.getLineOfTag(tagForJump));
+				}
+				else {
+					moveIP(programMemory.getNextRegister(ipIndex));
+				}
+		}
+	}
+
+	/**
+	 * The instruction load stores an operating in the ACC or Register with index 0.
+	 * 
+	 * @param operating
+	 *          Operating that matches that instruction.
+	 * @throws Exception
+	 *           If there is a runtime error for the instruction with that
+	 *           operating.
+	 */
+	private void loadf(Operating operating) throws Exception {
+		switch (operating.getOperatingName()) {
+			case "CONSTANT_ADDRESSING":
+				ArithmeticLogicUnit.assign(floatMemory.getACC(), (double) operating.getRegisterNumber());
+				break;
+
+			case "DIRECT_ADDRESSING":
+				int iValue = operating.getRegisterNumber();
+				ArithmeticLogicUnit.assign(floatMemory.getACC(), floatMemory.getRegisterAt(iValue).get());
+				break;
+
+			case "INDIRECT_ADDRESSING":
+				int jValue = resolveIndirectAddressing(operating.getRegisterNumber());
+				ArithmeticLogicUnit.assign(floatMemory.getACC(), floatMemory.getRegisterAt(jValue).get());
+				break;
+
+			case "TAG":
+				throw new Exception("Load can't have a tag as parameter.");
+		}
+		moveIP(programMemory.getNextRegister(ipIndex));
+	}
+
+	/**
+	 * The instruction store stores the value of the ACC or Register with index 0 in
+	 * the result value of the addressing type. Obviously it doesn't work with
+	 * constant addressing. You can't assign a value to a constant.
+	 * 
+	 * @param operating
+	 *          Operating that matches that instruction.
+	 * @throws Exception
+	 *           If there is a runtime error for the instruction with that
+	 *           operating.
+	 */
+
+	private void storef(Operating operating) throws Exception {
+		switch (operating.getOperatingName()) {
+			case "CONSTANT_ADDRESSING":
+				throw new Exception("Store can't have a constant addressing.");
+
+			case "DIRECT_ADDRESSING":
+				int iValue = operating.getRegisterNumber();
+				ArithmeticLogicUnit.assign(floatMemory.getRegisterAt(iValue), floatMemory.getACC().get());
+				break;
+
+			case "INDIRECT_ADDRESSING":
+				int jValue = resolveIndirectAddressing(operating.getRegisterNumber());
+				ArithmeticLogicUnit.assign(floatMemory.getRegisterAt(jValue), floatMemory.getACC().get());
+				break;
+
+			case "TAG":
+				throw new Exception("Store can't have a tag as parameter.");
+		}
+		moveIP(programMemory.getNextRegister(ipIndex));
+	}
+
+	/**
+	 * This instruction adds the value of the ACC or Register with index 0 with the
+	 * result value of the addressing type.
+	 * 
+	 * @param operating
+	 *          Operating that matches that instruction.
+	 * @throws Exception
+	 *           If there is a runtime error for the instruction with that
+	 *           operating.
+	 */
+
+	private void addf(Operating operating) throws Exception {
+		switch (operating.getOperatingName()) {
+			case "CONSTANT_ADDRESSING":
+				ArithmeticLogicUnit.add(floatMemory.getACC(), operating.getRegisterNumber());
+				break;
+
+			case "DIRECT_ADDRESSING":
+				int iValue = operating.getRegisterNumber();
+				ArithmeticLogicUnit.add(floatMemory.getACC(), floatMemory.getRegisterAt(iValue).get());
+				break;
+
+			case "INDIRECT_ADDRESSING":
+				int jValue = resolveIndirectAddressing(operating.getRegisterNumber());
+				ArithmeticLogicUnit.add(floatMemory.getACC(), floatMemory.getRegisterAt(jValue).get());
+				break;
+
+			case "TAG":
+				throw new Exception("Add can't have a tag as parameter.");
+		}
+		moveIP(programMemory.getNextRegister(ipIndex));
+	}
+
+	/**
+	 * This instruction subtract the value of the ACC or Register with index 0 with
+	 * the result value of the addressing type.
+	 * 
+	 * @param operating
+	 *          Operating that matches that instruction.
+	 * @throws Exception
+	 *           If there is a runtime error for the instruction with that
+	 *           operating.
+	 */
+	private void subf(Operating operating) throws Exception {
+		switch (operating.getOperatingName()) {
+			case "CONSTANT_ADDRESSING":
+				ArithmeticLogicUnit.subtract(floatMemory.getACC(), operating.getRegisterNumber());
+				break;
+
+			case "DIRECT_ADDRESSING":
+				int iValue = operating.getRegisterNumber();
+				ArithmeticLogicUnit.subtract(floatMemory.getACC(), floatMemory.getRegisterAt(iValue).get());
+				break;
+
+			case "INDIRECT_ADDRESSING":
+				int jValue = resolveIndirectAddressing(operating.getRegisterNumber());
+				ArithmeticLogicUnit.subtract(floatMemory.getACC(), floatMemory.getRegisterAt(jValue).get());
+				break;
+
+			case "TAG":
+				throw new Exception("Sub can't have a tag as parameter.");
+		}
+		moveIP(programMemory.getNextRegister(ipIndex));
+	}
+
+	/**
+	 * This instruction multiplies the value of the ACC or Register with index 0
+	 * with the result value of the addressing type.
+	 * 
+	 * @param operating
+	 *          Operating that matches that instruction.
+	 * @throws Exception
+	 *           If there is a runtime error for the instruction with that
+	 *           operating.
+	 */
+	private void mulf(Operating operating) throws Exception {
+		switch (operating.getOperatingName()) {
+			case "CONSTANT_ADDRESSING":
+				ArithmeticLogicUnit.multiply(floatMemory.getACC(), operating.getRegisterNumber());
+				break;
+
+			case "DIRECT_ADDRESSING":
+				int iValue = operating.getRegisterNumber();
+				ArithmeticLogicUnit.multiply(floatMemory.getACC(), floatMemory.getRegisterAt(iValue).get());
+				break;
+
+			case "INDIRECT_ADDRESSING":
+				int jValue = resolveIndirectAddressing(operating.getRegisterNumber());
+				ArithmeticLogicUnit.multiply(floatMemory.getACC(), floatMemory.getRegisterAt(jValue).get());
+				break;
+
+			case "TAG":
+				throw new Exception("Mul can't have a tag as parameter.");
+		}
+		moveIP(programMemory.getNextRegister(ipIndex));
+	}
+
+	/**
+	 * This instruction divides the value of the ACC or Register with index 0 with
+	 * the result value of the addressing type. The ALU is concerned about the
+	 * Arithmetical error of division by 0.
+	 * 
+	 * @param operating
+	 *          Operating that matches that instruction.
+	 * @throws Exception
+	 *           If there is a runtime error for the instruction with that
+	 *           operating.
+	 */
+	private void divf(Operating operating) throws Exception {
+		switch (operating.getOperatingName()) {
+			case "CONSTANT_ADDRESSING":
+				ArithmeticLogicUnit.divide(floatMemory.getACC(), operating.getRegisterNumber());
+				break;
+
+			case "DIRECT_ADDRESSING":
+				int iValue = operating.getRegisterNumber();
+				ArithmeticLogicUnit.divide(floatMemory.getACC(), floatMemory.getRegisterAt(iValue).get());
+				break;
+
+			case "INDIRECT_ADDRESSING":
+				int jValue = resolveIndirectAddressing(operating.getRegisterNumber());
+				ArithmeticLogicUnit.divide(floatMemory.getACC(), floatMemory.getRegisterAt(jValue).get());
+				break;
+
+			case "TAG":
+				throw new Exception("Div can't have a tag as parameter.");
+		}
+		moveIP(programMemory.getNextRegister(ipIndex));
+	}
+
+	/**
+	 * This instruction reads a value of the input Tape and stores it in the result
+	 * value of the addressing type. It doesn't work with the constant addressing
+	 * and neither if the result register is the ACC.
+	 * 
+	 * @param operating
+	 *          Operating that matches that instruction.
+	 * @throws Exception
+	 *           If there is a runtime error for the instruction with that
+	 *           operating.
+	 */
+	private void readf(Operating operating) throws Exception {
+		switch (operating.getOperatingName()) {
+			case "CONSTANT_ADDRESSING":
+				throw new Exception("The read value can't be assigned to a constant.");
+
+			case "DIRECT_ADDRESSING":
+				int iValue = operating.getRegisterNumber();
+
+				if (iValue == 0) {
+					throw new Exception("The read value can't be assigned to the ACC.");
+				}
+				else {
+					if (debug) {
+						ArithmeticLogicUnit.assign(floatMemory.getRegisterAt(iValue), inputArray.get(inputIndex++));
+					}
+					else {
+						ArithmeticLogicUnit.assign(floatMemory.getRegisterAt(iValue), inputTape.read());
+					}						
+				}
+				break;
+
+			case "INDIRECT_ADDRESSING":
+				int jValue = resolveIndirectAddressing(operating.getRegisterNumber());
+
+				if (jValue == 0) {
+					throw new Exception("The read value can't be assigned to the ACC.");
+				}
+				else {
+					if (debug) {
+						ArithmeticLogicUnit.assign(floatMemory.getRegisterAt(jValue), inputArray.get(inputIndex++));
+					}
+					else {
+						ArithmeticLogicUnit.assign(floatMemory.getRegisterAt(jValue), inputTape.read());
+					}					
+				}
+				break;
+
+			case "TAG":
+				throw new Exception("Read can't have a tag as parameter.");
+		}
+		moveIP(programMemory.getNextRegister(ipIndex));
+	}
+
+	/**
+	 * This instruction reads the result value of the addressing type and stores it
+	 * in the Output Tape. It doesn't work with the constant addressing and neither
+	 * if the result register is the ACC.
+	 * 
+	 * @param operating
+	 *          Operating that matches that instruction.
+	 * @throws Exception
+	 *           If there is a runtime error for the instruction with that
+	 *           operating.
+	 */
+
+	private void writef(Operating operating) throws Exception {
+		switch (operating.getOperatingName()) {
+			case "CONSTANT_ADDRESSING":
+				if (debug) {
+					outputArray.add((double) operating.getRegisterNumber());
+				}
+				else {
+					outputTape.write(operating.getRegisterNumber());					
+				}
+				break;
+
+			case "DIRECT_ADDRESSING":
+				int iValue = operating.getRegisterNumber();
+
+				if (iValue == 0) {
+					throw new Exception("The ACC value can't be assigned to the outputTape.");
+				}
+				else {
+					if (debug) {
+						outputArray.add((double) floatMemory.getRegisterAt(iValue).get());
+					}
+					else {
+						outputTape.write(floatMemory.getRegisterAt(iValue).get());					
+					}					
+				}
+				break;
+
+			case "INDIRECT_ADDRESSING":
+				int jValue = resolveIndirectAddressing(operating.getRegisterNumber());
+
+				if (jValue == 0) {
+					throw new Exception("The ACC value can't be assigned to the outputTape.");
+				}
+				else {					
+					if (debug) {
+						outputArray.add(floatMemory.getRegisterAt(jValue).get().doubleValue());
+					}
+					else {
+						outputTape.write(floatMemory.getRegisterAt(jValue).get());					
+					}	
+				}
+
+				break;
+			case "TAG":
+				throw new Exception("Write can't have a tag as parameter.");
+		}
+		moveIP(programMemory.getNextRegister(ipIndex));
+	}
+
+	/**
+	 * This instruction moves the IpIndex to the line of the tag passed by argument
+	 * if the ACC is zero.
+	 * 
+	 * @param operating
+	 *          Operating that matches that instruction.
+	 * @throws Exception
+	 *           If there is a runtime error for the instruction with that
+	 *           operating.
+	 */
+	private void jzerof(Operating operating) throws Exception {
+		switch (operating.getOperatingName()) {
+			case "CONSTANT_ADDRESSING":
+				throw new Exception("Jzero can't have an CONSTANT_ADDRESSING as parameter.");
+				
+			case "DIRECT_ADDRESSING":
+				throw new Exception("Jzero can't have an DIRECT_ADDRESSING as parameter.");
+				
+			case "INDIRECT_ADDRESSING":
+				throw new Exception("Jzero can't have an INDIRECT_ADDRESSING as parameter.");
+				
+			case "TAG":
+				String tagForJump = operating.getTag();
+				if (floatMemory.getACC().get() == 0) {
+					moveIP(programMemory.getLineOfTag(tagForJump));
+				}
+				else {
+					moveIP(programMemory.getNextRegister(ipIndex));
+				}
+		}
+	}
+
+	/**
+	 * This instruction moves the IpIndex to the line of the tag passed by argument
+	 * if the ACC is greater than zero.
+	 * 
+	 * @param operating
+	 *          Operating that matches that instruction.
+	 * @throws Exception
+	 *           If there is a runtime error for the instruction with that
+	 *           operating.
+	 */
+	private void jgtzf(Operating operating) throws Exception {
+		switch (operating.getOperatingName()) {
+			case "CONSTANT_ADDRESSING":
+				throw new Exception("Jgtz can't have an CONSTANT_ADDRESSING as parameter.");
+
+			case "DIRECT_ADDRESSING":
+				throw new Exception("Jgtz can't have an DIRECT_ADDRESSING as parameter.");
+
+			case "INDIRECT_ADDRESSING":
+				throw new Exception("Jgtz can't have an INDIRECT_ADDRESSING as parameter.");
+
+			case "TAG":
+				String tagForJump = operating.getTag();
+				if (floatMemory.getACC().get() > 0) {
 					moveIP(programMemory.getLineOfTag(tagForJump));
 				}
 				else {

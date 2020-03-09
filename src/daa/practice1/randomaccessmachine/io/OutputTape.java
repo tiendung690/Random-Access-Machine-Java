@@ -39,13 +39,13 @@ public class OutputTape {
 	 * @throws IOException
 	 *           Throws an error if there was a problem writing the number.
 	 */
-	public void write(int numberToWrite) throws IOException {
+	public void write(double numberToWrite) throws IOException {
 		outputTape.write(String.valueOf(numberToWrite));
 		outputTape.newLine();
 	}
 	
-	public void writeArray(ArrayList<Integer> outputArray) throws IOException {
-		for (Integer numberToWrite : outputArray) {
+	public void writeArray(ArrayList<Double> outputArray) throws IOException {
+		for (Double numberToWrite : outputArray) {
 			this.write(numberToWrite);
 		}
 	}
